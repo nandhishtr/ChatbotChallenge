@@ -94,7 +94,7 @@ class ChatbotImplementation(Chatbot):
                     state["user_identified_argumentation_strategy"] = False
 
         #print("********************************")
-        print("Current state : ", state)
+        # print("Current state : ", state)
         #print("********************************")
 
     def is_session_successful(self, session_id):

@@ -25,6 +25,7 @@ intents:
   - cherry_picking_data
   - contradictory_evidence
   - overriding_suspicion
+  - ask_quiz
 
 responses:
   utter_greet:

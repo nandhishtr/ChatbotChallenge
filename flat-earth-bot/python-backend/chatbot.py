@@ -2,13 +2,11 @@ from flask import Flask, request
 import requests
 import json
 import logging
-from flask_cors import CORS, cross_origin
 from abc import ABC, abstractmethod
 import os
 from typing import Dict, List
 from datetime import datetime
 from itertools import chain
-from textblob import TextBlob
 
 
 class Chatbot(ABC):
@@ -31,14 +29,14 @@ class Chatbot(ABC):
         # maximum input length of the llm prompt in characters.
         # the maximum llm input is actually measured in token and not in characters.
         # the maximum input length should be 7500 token.
-        # here we compute that a token has 2 characters. 
+        # here we compute that a token has 2 characters.
         self.max_prompt_length = 15000
 
     # call rasa nlu
-    def nlu(self, user_message : str):
+    def nlu(self, user_message: str):
         try:
             data = {"text": user_message}
-            response = requests.post(self.rasa_nlu_url, json = data)
+            response = requests.post(self.rasa_nlu_url, json=data)
             nlu_response = response.json()
             intent = nlu_response["intent"]
             return intent, nlu_response
@@ -47,15 +45,37 @@ class Chatbot(ABC):
             logging.exception(e)
 
     # call nlu, generate prompt and call the llm
-    def get_answer(self, messages : List[Dict], session_id : str, llm_parameter : Dict, chatbot_id : str, uid : str):
+    def get_answer(self, messages: List[Dict], session_id: str, llm_parameter: Dict, chatbot_id: str, uid: str):
         intent, nlu_response = self.nlu(messages[-1]["message"])
+        user_intent = intent
 
-        # print("*****************************************************")
-        # print(messages)
-        # print("*****************************************************")
-        # print("*****************************************************")
-        # print(messages[-1]["message"])
-        # print("*****************************************************")
+        # Check if the intent is "Ask quiz"
+        if intent["name"] == "ask_quiz":
+            print("Inside get_answer if Ask quiz ")
+            prompt_for_quiz = "Generate a sentence exactly as the given : 'Here is the quiz'"
+            logging_info = {
+                "messages": messages,
+                "session_id": session_id,
+                "llm_parameters": llm_parameter,
+                "nlu_response": nlu_response,
+                "prompt": prompt_for_quiz,
+                "success": True,
+                "time": datetime.now().isoformat(),
+                "uid": uid
+            }
+            answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
+                                                      user_intent)
+            # the first message of the response stream will be the header
+            successs = True
+            header = {"dialog_success": False}
+            header = json.dumps(header)
+            header = "header: " + header + "\n\n"
+            header = header.encode()
+            header_generator = [x for x in [header]]
+
+            generator = chain(header_generator, answer_generator)
+            return generator
+
         prompt, success = self.get_prompt(messages, intent, session_id)
         logging_info = {
             "messages": messages,
@@ -68,8 +88,8 @@ class Chatbot(ABC):
             "uid": uid
         }
 
-        answer_generator = self.call_llm(prompt, llm_parameter, logging_info, chatbot_id)
-
+        answer_generator = self.call_llm(prompt, llm_parameter, logging_info, chatbot_id, user_intent)
+        print("answer_generator: ", answer_generator)
         # the first message of the response stream will be the header
         successs = True
         header = {"dialog_success": success}
@@ -79,6 +99,7 @@ class Chatbot(ABC):
         header_generator = [x for x in [header]]
 
         generator = chain(header_generator, answer_generator)
+        print("generator:", generator)
         return generator
 
     # construct a theater script dialog from the list of messages
@@ -92,12 +113,11 @@ class Chatbot(ABC):
         logging.info(len(dlg))
         return "\n".join(dlg)
 
-        
     @abstractmethod
     def get_prompt(self, messages, intent, session_id):
         pass
 
-    def write_to_logfile(self, log_str : str, chatbot_id : str):
+    def write_to_logfile(self, log_str: str, chatbot_id: str):
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
         if self.logfile is None:
@@ -105,12 +125,13 @@ class Chatbot(ABC):
         self.logfile.write(log_str)
         self.logfile.flush()
 
-    def call_llm(self, prompt : str, llm_parameter : Dict, logging_info : Dict, chatbot_id : str):
+    def call_llm(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str, user_intent: str):
         url = f"https://dfki-3108.dfki.de/mistral-api/generate_stream"
         data = {
             "inputs": prompt,
             "parameters": llm_parameter
         }
+
         # print("*****************************************************")
         # print("Data to llm:", data)
         # print("*****************************************************")
@@ -126,15 +147,15 @@ class Chatbot(ABC):
                 http_password = "aaRePuumL6JL"
                 session = requests.Session()
                 session.auth = (http_user, http_password)
-                response = session.post(url, stream = True, json=data)
+                response = session.post(url, stream=True, json=data)
             except Exception as e:
                 logging.error("There was a problem connecting to the LLM server.")
                 logging.exception(e)
 
             running_text = []
-            
+
             stop = False
-            for chunk in response.iter_content(chunk_size = None):
+            for chunk in response.iter_content(chunk_size=None):
                 if stop:
                     break
                 chunk_utf8 = chunk.decode("utf-8")[5:]
@@ -156,6 +177,8 @@ class Chatbot(ABC):
             running_text = "".join(running_text)
             intent, nlu_response = self.nlu(running_text)
             print("INTENT: ", intent)
+            print("User INTENT: ", user_intent)
+            print("running_text: ", running_text)
             output_string = ""
             if intent["name"] == "nefarious_intent":
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
@@ -189,7 +212,8 @@ class Chatbot(ABC):
                 "generated_text": None,
                 "details": None
             }
-            
+            print("json_structure: ", json_structure)
+
             # Convert JSON structure to string and yield
             json_string = 'data:' + json.dumps(json_structure) + '\n\n'
             yield 'data:{"index":-1,"token":{"id":-1,"text":"\n","logprob":0.0,"special":false},"generated_text":null,"details":null}\n\n'
@@ -200,6 +224,98 @@ class Chatbot(ABC):
             self.last_logging_info = logging_info
 
         return generate()
+
+    def call_llm_for_quiz(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str,
+                          user_intent: str):
+        url = f"https://dfki-3108.dfki.de/mistral-api/generate_stream"
+        data = {
+            "inputs": prompt,
+            "parameters": llm_parameter
+        }
+
+        # print("*****************************************************")
+        # print("Data to llm:", data)
+        # print("*****************************************************")
+
+        # connect to the llm api
+        # read response stream
+        # parse the llm answer from the stream for logging
+        # also pass the stream to the frontend
+        # the function stops the output stream at the first \n.
+        def generate():
+            try:
+                http_user = "mistral"
+                http_password = "aaRePuumL6JL"
+                session = requests.Session()
+                session.auth = (http_user, http_password)
+                response = session.post(url, stream=True, json=data)
+            except Exception as e:
+                logging.error("There was a problem connecting to the LLM server.")
+                logging.exception(e)
+
+            running_text = []
+
+            stop = False
+            for chunk in response.iter_content(chunk_size=None):
+                if stop:
+                    break
+                chunk_utf8 = chunk.decode("utf-8")[5:]
+                for line in chunk_utf8.split("\n"):
+                    if len(line.strip()) == 0:
+                        continue
+                    try:
+                        jsono = json.loads(line)
+                        next_str = jsono["token"]["text"]
+                        if next_str == "\n" and len(running_text) > 0:
+                            stop = True
+                        running_text.append(next_str)
+                    except Exception as e:
+                        logging.exception(e)
+                        pass
+                yield chunk
+
+            # write chatlog
+            running_text = "".join(running_text)
+            intent, nlu_response = self.nlu(running_text)
+            print("INTENT: ", intent)
+            print("User INTENT: ", user_intent)
+            print("running_text: ", running_text)
+            output_string = ""
+            if user_intent["name"] == "ask_quiz":
+                question = "Which argumentation strategy refers to a malicious or harmful purpose behind someone's actions, often involving deliberate deception or harm ?"
+                options = [
+                    "a) Contradictory evidence",
+                    "b) Nefarious Intent",
+                    "c) Cherry Picking"
+                ]
+                output_string = f"<br/><b>{question}</b><br/><i>{'<br/>'.join(options)}</i><br/><b>Provide answer to the quiz by" \
+                                f" typing option a or option b or  option c </b><br/>"
+            print("output_string:", output_string)
+            # Craft the JSON-like string with variable content
+            json_structure = {
+                "index": -1,
+                "token": {
+                    "id": -1,
+                    "text": output_string,
+                    "logprob": 0.0,
+                    "special": False
+                },
+                "generated_text": None,
+                "details": None
+            }
+            print("json_structure: ", json_structure)
+
+            # Convert JSON structure to string and yield
+            json_string = 'data:' + json.dumps(json_structure) + '\n\n'
+            yield 'data:{"index":-1,"token":{"id":-1,"text":"\n","logprob":0.0,"special":false},"generated_text":null,"details":null}\n\n'
+            yield json_string
+            logging_info["llm_response"] = running_text
+            logging_info_str = json.dumps(logging_info) + "\n"
+            self.write_to_logfile(logging_info_str, chatbot_id)
+            self.last_logging_info = logging_info
+
+        return generate()
+
 
 # helper function that reads the streaming response from the llm and converts it to a single string.
 def llm_stream_to_str(generator):
@@ -212,4 +328,3 @@ def llm_stream_to_str(generator):
         except Exception as e:
             pass
     return "".join(response)
-

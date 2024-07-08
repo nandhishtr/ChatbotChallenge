@@ -432,3 +432,8 @@ nlu:
       - Flat-Earthers often point out inconsistencies in government narratives about space exploration and question the legitimacy of space agencies. 
       - Some flat-Earthers believe there's a vast conspiracy to hide the truth about the flat Earth, involving governments, scientists, and media working together. 
     
+
+  - intent: ask_quiz
+    examples: |
+      - we can start quiz
+      - I have learned things..please ask me quiz
