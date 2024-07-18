@@ -53,7 +53,7 @@ class ChatbotImplementation(Chatbot):
             intent_prompt = prompts.provided_evidence_against_flat_earth
         elif intent_name == "provided_evidence_for_spherical_earth":
             intent_prompt = prompts.provided_evidence_for_spherical_earth
-        elif intent_name == "termination":
+        elif intent_name == "termination" and intent["confidence"] > 0.8:
             intent_prompt = prompts.termination_template
         else:
             intent_prompt = prompts.argumentation_intent_prompt
@@ -72,7 +72,7 @@ class ChatbotImplementation(Chatbot):
                 state["user_asks_for_clearer_explanation"] = True
             elif intent["name"] == "disagree_flat_earth":
                 state["disagree_flat_earth"] = True
-            elif intent["name"] == "termination":
+            elif intent["name"] == "termination" and intent["confidence"] > 0.8:
                 state["termination"] = True
             elif intent["name"] == "user_identified_argumentation_strategy":
                 if state["provided_evidence_against_flat_earth"] or state["provided_evidence_for_spherical_earth"] or \
