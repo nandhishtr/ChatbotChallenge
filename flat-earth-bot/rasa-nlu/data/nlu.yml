@@ -511,7 +511,7 @@ nlu:
       - Thank you, but I want to stop now.
       - Can we end our discussion here?
       - I think I'm done for now.
-      - Let's wrap this up.
+      - Let's wrap this up for now.
       - I've heard enough, thanks.
       - I'm ready to conclude our conversation.
       - I'd like to finish up now.
@@ -524,3 +524,29 @@ nlu:
       - I want to log off now.
       - Let's end this session.
       - I'm satisfied with the discussion; let's end it.
+      - That's enough for today, let's end our chat.
+      - I think we've covered everything, let's stop here.
+      - Let's bring this conversation to a close.
+      - I've had enough of this topic, let's finish.
+      - I'm ready to stop now, thank you.
+
+  - intent: continuation
+    examples: |
+      - Let's get back to the conversation.
+      - Can we continue our discussion?
+      - Let's keep talking.
+      - I want to continue our chat.
+      - Let's resume our conversation.
+      - Let's go back to what we were discussing.
+      - I'm ready to continue.
+      - Let's carry on with our discussion.
+      - I'm still interested in talking about this.
+      - Please continue.
+      - Let's pick up where we left off.
+      - I want to keep discussing this topic.
+      - Let's not end the conversation yet.
+      - We should keep going with our discussion.
+      - Let's continue this conversation.
+      - I'm not done talking yet.
+      - There's more to discuss, let's keep going.
+      - Let's dive back into our discussion.

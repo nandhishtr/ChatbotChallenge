@@ -27,6 +27,7 @@ intents:
   - overriding_suspicion
   - ask_quiz
   - termination
+  - continuation
 
 responses:
   utter_greet:
