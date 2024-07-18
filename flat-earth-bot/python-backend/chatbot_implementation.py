@@ -2,9 +2,9 @@ from chatbot import Chatbot
 import threading
 from textblob import TextBlob
 import prompts
-
+testing=0
 lock = threading.Lock()
-
+hintingCount=0
 
 class ChatbotImplementation(Chatbot):
 
@@ -75,12 +75,13 @@ class ChatbotImplementation(Chatbot):
             elif intent["name"] == "termination":
                 state["termination"] = True
             elif intent["name"] == "user_identified_argumentation_strategy":
-                if state["provided_evidence_against_flat_earth"] and state["provided_evidence_for_spherical_earth"] and \
-                        state["curiosity_about_flat_earth"] and state["user_asks_for_clearer_explanation"] and state[
+                if state["provided_evidence_against_flat_earth"] or state["provided_evidence_for_spherical_earth"] or \
+                        state["curiosity_about_flat_earth"] or state["user_asks_for_clearer_explanation"] or state[
                     "disagree_flat_earth"]:
                     state["user_identified_argumentation_strategy"] = True
                 else:
                     state["user_identified_argumentation_strategy"] = False
+        return state["user_identified_argumentation_strategy"]
 
     def is_session_successful(self, session_id):
         if session_id in self.session_states:
@@ -93,14 +94,14 @@ class ChatbotImplementation(Chatbot):
         latest_user_ip = messages[-1]["message"]
         sentiment_prompt, sentiment = self.get_sentiment_analysis_prompt(latest_user_ip)
         intent_prompt, intent_name = self.get_intent_prompt(intent)
+        self.update_session_state(intent, session_id)
         session_is_successful = self.is_session_successful(session_id)
 
-        if session_is_successful and intent_name == "termination":
+        if session_is_successful:
 
             prompt = prompts.closure_template.format(
                 user_message=latest_user_ip)  # + self.build_dialog(messages)
             return prompt, session_is_successful
         else:
-            self.update_session_state(intent, session_id)
             prompt = prompts.prompt_template_persona + sentiment_prompt + intent_prompt + self.build_dialog(messages)
             return prompt, False

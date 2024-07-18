@@ -49,7 +49,6 @@ def get_generator():
 @app.route("/api/chat", methods=['POST'])
 @cross_origin()
 def chat():
-    print("***************************************")
     generator = get_generator()
     return app.response_class(generator, mimetype='application/json')
 
