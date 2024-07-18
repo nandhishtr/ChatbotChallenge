@@ -10,8 +10,6 @@ class ChatbotImplementation(Chatbot):
 
     def __init__(self):
         Chatbot.__init__(self)
-        self.succesful_sessions = []
-        self.session_states = {}
 
     def initialize_session(self, session_id):
         if session_id not in self.session_states:
@@ -22,6 +20,7 @@ class ChatbotImplementation(Chatbot):
                 "provided_evidence_against_flat_earth": False,
                 "provided_evidence_for_spherical_earth": False,
                 "user_identified_argumentation_strategy": False,
+                "termination": False,
             }
 
     def get_sentiment_analysis_prompt(self, text):
@@ -54,24 +53,12 @@ class ChatbotImplementation(Chatbot):
             intent_prompt = prompts.provided_evidence_against_flat_earth
         elif intent_name == "provided_evidence_for_spherical_earth":
             intent_prompt = prompts.provided_evidence_for_spherical_earth
-
+        elif intent_name == "termination":
+            intent_prompt = prompts.termination_template
         else:
             intent_prompt = prompts.argumentation_intent_prompt
         return intent_prompt, intent_name
 
-
-    # def update_session_state(self, intent, session_id):
-    #     if session_id in self.session_states:
-    #         state = self.session_states[session_id]
-    #         if intent["name"] == "provided_evidence_against_flat_earth":
-    #             state["provided_evidence_against_flat_earth"] = True
-    #         elif intent["name"] == "provided_evidence_for_spherical_earth":
-    #             state["provided_evidence_for_spherical_earth"] = True
-    #         elif intent["name"] == "user_identified_argumentation_strategy":
-    #             state["user_identified_argumentation_strategy"] = True
-    #     #print("********************************")
-    #     #print("Current state : ", state)
-    #     #print("********************************")
     def update_session_state(self, intent, session_id):
         if session_id in self.session_states:
             state = self.session_states[session_id]
@@ -85,6 +72,8 @@ class ChatbotImplementation(Chatbot):
                 state["user_asks_for_clearer_explanation"] = True
             elif intent["name"] == "disagree_flat_earth":
                 state["disagree_flat_earth"] = True
+            elif intent["name"] == "termination":
+                state["termination"] = True
             elif intent["name"] == "user_identified_argumentation_strategy":
                 if state["provided_evidence_against_flat_earth"] and state["provided_evidence_for_spherical_earth"] and \
                         state["curiosity_about_flat_earth"] and state["user_asks_for_clearer_explanation"] and state[
@@ -93,42 +82,25 @@ class ChatbotImplementation(Chatbot):
                 else:
                     state["user_identified_argumentation_strategy"] = False
 
-        #print("********************************")
-        # print("Current state : ", state)
-        #print("********************************")
-
     def is_session_successful(self, session_id):
         if session_id in self.session_states:
             state = self.session_states[session_id]
-            return all(state.values())
+            return state["termination"] == True
         return False
 
     def get_prompt(self, messages, intent, session_id):
         self.initialize_session(session_id)
-        #print("*********************")
-        #print("intent", intent)
         latest_user_ip = messages[-1]["message"]
         sentiment_prompt, sentiment = self.get_sentiment_analysis_prompt(latest_user_ip)
         intent_prompt, intent_name = self.get_intent_prompt(intent)
-        #print("*********************")
-        #print(f"Sentiment: {sentiment} , Intent: {intent_name} ", "latest input :", latest_user_ip)
-        #print("*********************")
-        self.update_session_state(intent, session_id)
         session_is_successful = self.is_session_successful(session_id)
 
-        if session_is_successful:
-            # generate the prompt that the user succeeded
-            prompt = prompts.prompt_template_success.format(
+        if session_is_successful and intent_name == "termination":
+
+            prompt = prompts.closure_template.format(
                 user_message=latest_user_ip)  # + self.build_dialog(messages)
-            #print("Prompt to llm:", prompt)
-
+            return prompt, session_is_successful
         else:
-
+            self.update_session_state(intent, session_id)
             prompt = prompts.prompt_template_persona + sentiment_prompt + intent_prompt + self.build_dialog(messages)
-            # #print("*****************************************************")
-            # #print("prompt template is :", prompt_template)
-            #print("*****************************************************")
-            #print("Prompt to llm:", prompt)
-            #print("*****************************************************")
-
-        return prompt, session_is_successful
+            return prompt, False

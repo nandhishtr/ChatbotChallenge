@@ -7,7 +7,10 @@ import os
 from typing import Dict, List
 from datetime import datetime
 from itertools import chain
+import prompts
 
+endConversationCount = 0
+endConversationTrigger = False
 
 class Chatbot(ABC):
 
@@ -25,7 +28,8 @@ class Chatbot(ABC):
 
         self.logfile = None
         self.last_logging_info = None
-
+        self.succesful_sessions = []
+        self.session_states = {}
         # maximum input length of the llm prompt in characters.
         # the maximum llm input is actually measured in token and not in characters.
         # the maximum input length should be 7500 token.
@@ -46,37 +50,55 @@ class Chatbot(ABC):
 
     # call nlu, generate prompt and call the llm
     def get_answer(self, messages: List[Dict], session_id: str, llm_parameter: Dict, chatbot_id: str, uid: str):
+        print("Session ID: ", session_id)
+        global endConversationTrigger
+        global endConversationCount
+        if session_id not in self.session_states:
+            print("refreshed session")
+            endConversationCount = 0
+            endConversationTrigger = False
+        if endConversationTrigger:
+            endConversationCount += 1
+        print("endConversationCount: ", endConversationCount)    
         intent, nlu_response = self.nlu(messages[-1]["message"])
         user_intent = intent
-
         # Check if the intent is "Ask quiz"
-        if intent["name"] == "ask_quiz":
-            print("Inside get_answer if Ask quiz ")
-            prompt_for_quiz = "Generate a sentence exactly as the given : 'Here is the quiz'"
-            logging_info = {
-                "messages": messages,
-                "session_id": session_id,
-                "llm_parameters": llm_parameter,
-                "nlu_response": nlu_response,
-                "prompt": prompt_for_quiz,
-                "success": True,
-                "time": datetime.now().isoformat(),
-                "uid": uid
-            }
-            answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
-                                                      user_intent)
-            # the first message of the response stream will be the header
-            successs = True
-            header = {"dialog_success": False}
-            header = json.dumps(header)
-            header = "header: " + header + "\n\n"
-            header = header.encode()
-            header_generator = [x for x in [header]]
+        if session_id in self.session_states:
+            state = self.session_states[session_id]
+            if state["termination"] == True and intent["name"] == "ask_quiz":
+                endConversationTrigger = True
+                print("Inside get_answer if Ask quiz ")
+                prompt_for_quiz = "Generate a sentence exactly as the given : 'Here is the quiz'"
+                logging_info = {
+                    "messages": messages,
+                    "session_id": session_id,
+                    "llm_parameters": llm_parameter,
+                    "nlu_response": nlu_response,
+                    "prompt": prompt_for_quiz,
+                    "success": True,
+                    "time": datetime.now().isoformat(),
+                    "uid": uid
+                }
+                answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
+                                                        user_intent)
+                # the first message of the response stream will be the header
+                successs = True
+                header = {"dialog_success": False}
+                header = json.dumps(header)
+                header = "header: " + header + "\n\n"
+                header = header.encode()
+                header_generator = [x for x in [header]]
 
-            generator = chain(header_generator, answer_generator)
-            return generator
-
-        prompt, success = self.get_prompt(messages, intent, session_id)
+                generator = chain(header_generator, answer_generator)
+                return generator
+        if endConversationCount == 2:
+            print("###############################")
+            latest_user_ip = messages[-1]["message"]
+            prompt = prompts.closure_template.format(
+                user_message=latest_user_ip)
+            success = True
+        else:
+            prompt, success = self.get_prompt(messages, intent, session_id)
         logging_info = {
             "messages": messages,
             "session_id": session_id,
@@ -126,21 +148,14 @@ class Chatbot(ABC):
         self.logfile.flush()
 
     def call_llm(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str, user_intent: str):
-        url = f"https://dfki-3108.dfki.de/mistral-api/generate_stream"
+        url = "http://mds-gpu-medinym.et.uni-magdeburg.de:9000/generate_stream"
+        if os.getenv("LLM_URL") is not None:
+            self.logdir = os.getenv("LLM_URL")
         data = {
             "inputs": prompt,
             "parameters": llm_parameter
         }
 
-        # print("*****************************************************")
-        # print("Data to llm:", data)
-        # print("*****************************************************")
-
-        # connect to the llm api
-        # read response stream
-        # parse the llm answer from the stream for logging
-        # also pass the stream to the frontend
-        # the function stops the output stream at the first \n.
         def generate():
             try:
                 http_user = "mistral"
@@ -180,21 +195,27 @@ class Chatbot(ABC):
             print("User INTENT: ", user_intent)
             print("running_text: ", running_text)
             output_string = ""
+            global hintingCount
+
             if intent["name"] == "nefarious_intent":
+                # hintingCount += 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                     You can observe nefarious intent in my current response. "Nefarious intent" refers to a malicious 
                     or harmful purpose behind someone's actions, often involving deliberate deception or harm. </i></span>"""
             elif intent["name"] == "cherry_picking_data":
+                # hintingCount += 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                         You can observe cherry-picking data in my current response. "Cherry-picking data" refers to 
                         selectively presenting only the evidence that supports a particular viewpoint, 
                         while ignoring or downplaying evidence that contradicts it. </i></span>"""
             elif intent["name"] == "contradictory_evidence":
+                # hintingCount += 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                         You can observe contradictory evidence explanations in my current response. Flat-Earthers 
                         often propose alternative explanations for observations that seem to contradict the flat Earth model. 
                         These explanations attempt to reconcile their beliefs with established scientific principles. </i></span>"""
             elif intent["name"] == "overriding_suspicion":
+                # hintingCount += 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                         You can observe overriding suspicion tactics in my current response. Flat-Earthers 
                         sometimes disregard evidence for a spherical Earth due to skepticism of authority figures, 
@@ -227,21 +248,13 @@ class Chatbot(ABC):
 
     def call_llm_for_quiz(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str,
                           user_intent: str):
-        url = f"https://dfki-3108.dfki.de/mistral-api/generate_stream"
+        url = "http://mds-gpu-medinym.et.uni-magdeburg.de:9000/generate_stream"
+        if os.getenv("LLM_URL") is not None:
+            self.logdir = os.getenv("LLM_URL")
         data = {
             "inputs": prompt,
             "parameters": llm_parameter
         }
-
-        # print("*****************************************************")
-        # print("Data to llm:", data)
-        # print("*****************************************************")
-
-        # connect to the llm api
-        # read response stream
-        # parse the llm answer from the stream for logging
-        # also pass the stream to the frontend
-        # the function stops the output stream at the first \n.
         def generate():
             try:
                 http_user = "mistral"
@@ -288,8 +301,7 @@ class Chatbot(ABC):
                     "b) Nefarious Intent",
                     "c) Cherry Picking"
                 ]
-                output_string = f"<br/><b>{question}</b><br/><i>{'<br/>'.join(options)}</i><br/><b>Provide answer to the quiz by" \
-                                f" typing option a or option b or  option c </b><br/>"
+                output_string = f"<br/><b>{question}</b><br/><i>{'<br/>'.join(options)}</i><br/><b>Please provide your answer." 
             print("output_string:", output_string)
             # Craft the JSON-like string with variable content
             json_structure = {
@@ -313,6 +325,7 @@ class Chatbot(ABC):
             logging_info_str = json.dumps(logging_info) + "\n"
             self.write_to_logfile(logging_info_str, chatbot_id)
             self.last_logging_info = logging_info
+            # hintingCount = 0
 
         return generate()
 

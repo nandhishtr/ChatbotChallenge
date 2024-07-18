@@ -26,6 +26,7 @@ intents:
   - contradictory_evidence
   - overriding_suspicion
   - ask_quiz
+  - termination
 
 responses:
   utter_greet:

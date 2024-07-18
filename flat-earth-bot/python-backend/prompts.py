@@ -131,3 +131,20 @@ and explains about the argumentation strategy. If the user mentions any other ar
 
 User: {user_message}
 Chatbot: """
+
+termination_template = """
+The user has indicated that they would like to end the conversation. The bot acknowledges the user's request and asks if the user is interested
+ in a quiz to test their learning regarding the argumentation strategies or if they would prefer to end the conversation. Stick this this type
+of conversation and do not introduce any new beliefs. 
+
+User: {user_message}
+Chatbot: 
+"""
+
+closure_template = """
+The conversation has come to an end. The bot thanks the user for the interaction and encourages them to return for further discussions or questions.
+The bot wishes the user to have a nice day.  
+
+User: {user_message}
+Chatbot: 
+"""

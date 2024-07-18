@@ -395,6 +395,20 @@ nlu:
       - Those who believe in a spherical Earth are just following the crowd without critically examining the evidence.
       - The flat Earth truth is suppressed because it threatens the status quo and challenges established power structures.
       - They want you to believe the Earth is round to control your thoughts and behaviors.
+      - Powerful organizations have been promoting the spherical earth theory for centuries to control information.
+      - The space industry relies on the spherical earth theory to justify their existence and budgets.
+      - Mainstream science promotes the spherical earth theory to control information and suppress alternative viewpoints, ensuring that only their narrative is accepted as truth.
+      - Governments and scientific institutions are involved in covering up the true shape of the Earth to maintain power and control over the masses, hiding evidence that contradicts their claims.
+      - NASA fabricates space photos and data to perpetuate the illusion of a spherical earth, creating composite images and CGI representations to deceive the public.
+      - You can’t trust mainstream science; they all have hidden agendas to push the round Earth myth and suppress any evidence supporting the flat Earth theory.
+      - The spherical earth theory is a lie propagated by powerful elites to deceive the public, manipulating information to keep people ignorant of the flat Earth's reality.
+      - Most people are too brainwashed by mainstream education to see the truth about the flat Earth, accepting the round Earth theory without questioning the evidence.
+      - The education system is designed to keep us ignorant about the real shape of the Earth and suppress flat Earth evidence, ensuring that we only learn the accepted mainstream narrative.
+      - Those who believe in a spherical Earth are just following the crowd without critically examining the evidence, blindly accepting what they are told by authorities.
+      - The flat Earth truth is suppressed because it threatens the status quo and challenges established power structures, posing a risk to those in control.
+      - They want you to believe the Earth is round to control your thoughts and behaviors, manipulating public perception to maintain their dominance.
+      - Powerful organizations have been promoting the spherical earth theory for centuries to control information, ensuring that alternative viewpoints are dismissed and ridiculed.
+      - The space industry relies on the spherical earth theory to justify their existence and budgets, fabricating missions and discoveries to maintain funding and public support.
 
   - intent: cherry_picking_data
     examples: |
@@ -408,32 +422,104 @@ nlu:
       - The Bedford Level experiment proved that water is level and the Earth is flat.
       - You can see too far across the ocean for the Earth to be round.
       - High-altitude balloon footage shows a flat horizon, not a curved one.
-
+      - Large bodies of water, like oceans and seas, remain level and flat, contradicting the curvature expected on a spherical earth.
+      - Stars and celestial bodies move in their orbits above the flat earth, creating different time zones and seasons.
+      - If the Earth were round, we would see the curvature from an airplane, but we don’t. The horizon always appears flat, no matter how high you go.
+      - In old maps, the Earth was depicted as flat, so it must be true. These historical depictions align with what we can observe with our own eyes.
+      - Water always finds its level, which proves the Earth is flat. This is observable in large bodies of water like oceans and lakes.
+      - Look at the horizon; it’s always flat, never curved. Even at great heights, the horizon remains straight and level.
+      - If the Earth were round, buildings wouldn't appear perfectly vertical at long distances. We would see a noticeable tilt, which we don’t.
+      - There are ancient cultures that believed the Earth was flat, and they were closer to the truth. Their observations and records should not be dismissed.
+      - Ships on the horizon appear to sink, but if you zoom in with a camera, they reappear, proving the Earth is flat. This is a simple test anyone can perform.
+      - The Bedford Level experiment proved that water is level and the Earth is flat. This experiment has been repeated multiple times with the same results.
+      - You can see too far across the ocean for the Earth to be round. The distance visible contradicts the expected curvature of a spherical Earth.
+      - High-altitude balloon footage shows a flat horizon, not a curved one. This footage is taken from independent sources, not just space agencies.
 
   - intent: contradictory_evidence
     examples: |
-      - Ships disappear hull first over the horizon because of perspective, not curvature.  They simply shrink and become obscured by distance, not hull first. 
-      - Circumaviation flights might be following a circular path on a flat Earth, but the true nature of the Earth's edge and how travel beyond it works is not understood. 
-      - Different constellations being visible could be explained by a complex light refraction phenomenon in the flat Earth model, although the exact mechanism is debated.
-      - The Earth casting a round shadow on the moon during a lunar eclipse could be caused by a holographic projection or some other unexplained atmospheric effect. 
+      - Ships disappear hull first over the horizon because of perspective, not curvature.
+      - Circumaviation flights might be following a circular path on a flat Earth.
+      - Different constellations being visible could be explained by a complex light refraction phenomenon in the flat Earth model.
+      - The Earth casting a round shadow on the moon during a lunar eclipse could be caused by a holographic projection.
       - Satellites might be circling along the dome above the flat Earth, not around a sphere.
-      - The apparent difference in sunrise and sunset times across locations wouldn't be possible on a globe, but flat-Earthers propose alternative explanations involving perspective and atmospheric effects. 
-      - The concept of time zones wouldn't be necessary on a flat Earth, as the sun would supposedly illuminate the entire flat plane at once. Flat-Earthers propose alternative explanations for time differences. 
-      - The Coriolis effect, used to explain weather patterns on a globe, is disputed by some flat-Earthers who propose alternative explanations for wind and ocean currents. 
-
+      - The apparent difference in sunrise and sunset times across locations wouldn't be possible on a globe.
+      - The concept of time zones wouldn't be necessary on a flat Earth.
+      - The Coriolis effect is disputed by some flat-Earthers who propose alternative explanations for wind and ocean currents.
+      - Astronauts report seeing a flat earth when they're in space.
+      - Gravity, as understood by mainstream science, does not exist. Instead, what we perceive as gravity is the result of the flat earth accelerating upwards.
+      - Ships disappear hull first over the horizon because of perspective, not curvature. They simply shrink and become obscured by distance.
+      - Circumaviation flights might be following a circular path on a flat Earth, but the true nature of the Earth's edge and how travel beyond it works is not understood.
+      - Different constellations being visible could be explained by a complex light refraction phenomenon in the flat Earth model, although the exact mechanism is debated.
+      - The Earth casting a round shadow on the moon during a lunar eclipse could be caused by a holographic projection or some other unexplained atmospheric effect.
+      - Satellites might be circling along the dome above the flat Earth, not around a sphere, aligning with the flat Earth model.
+      - The apparent difference in sunrise and sunset times across locations wouldn't be possible on a globe, but flat-Earthers propose alternative explanations involving perspective and atmospheric effects.
+      - The concept of time zones wouldn't be necessary on a flat Earth, as the sun would supposedly illuminate the entire flat plane at once. Flat-Earthers propose alternative explanations for time differences.
+      - The Coriolis effect, used to explain weather patterns on a globe, is disputed by some flat-Earthers who propose alternative explanations for wind and ocean currents.
+      - Astronauts report seeing a flat earth when they're in space, which contradicts the spherical earth theory.
+      - Gravity, as understood by mainstream science, does not exist. Instead, what we perceive as gravity is the result of the flat earth accelerating upwards at 9.8 meters per second squared.
+ 
   - intent: overriding_suspicion
     examples: |
-      - Why haven't any photos or videos been captured from space that definitively show the Earth's curvature?  (Flat-Earthers often question the authenticity of space imagery, suggesting CGI or manipulation)
-      - Wouldn't the physics of gravity on a sphere be incredibly complex and require a lot of unproven assumptions?  (Flat-Earthers often propose alternative explanations for gravity, such as density or acceleration)
-      - If the Earth is a sphere, why can we see such vast distances across oceans without any noticeable curve?  (Flat-Earthers often underestimate the scale of the Earth and the limitations of human perception at ground level)
-      - Many historical and scientific figures throughout time believed in a flat Earth.  Shouldn't their observations be considered?  (Flat-Earthers emphasize alternative interpretations of history, claiming early civilizations had access to knowledge lost to modern science)
-      - The globe model seems to require a lot of faith and trust in authority figures, while the flat Earth model is simpler and easier to understand.  (Flat-Earthers often distrust mainstream science and prefer explanations that align with their intuition)
-      - The concept of a globe Earth requires complex explanations for phenomena like seasons and day/night cycles. Flat-Earthers propose alternative explanations that they find more intuitive. 
-      - Flat-Earthers often point out inconsistencies in government narratives about space exploration and question the legitimacy of space agencies. 
-      - Some flat-Earthers believe there's a vast conspiracy to hide the truth about the flat Earth, involving governments, scientists, and media working together. 
-    
+      - Why haven't any photos or videos been captured from space that definitively show the Earth's curvature?
+      - Wouldn't the physics of gravity on a sphere be incredibly complex and require a lot of unproven assumptions?
+      - If the Earth is a sphere, why can we see such vast distances across oceans without any noticeable curve?
+      - Many historical and scientific figures throughout time believed in a flat Earth. Shouldn't their observations be considered?
+      - The globe model seems to require a lot of faith and trust in authority figures, while the flat Earth model is simpler and easier to understand.
+      - The concept of a globe Earth requires complex explanations for phenomena like seasons and day/night cycles.
+      - Flat-Earthers often point out inconsistencies in government narratives about space exploration.
+      - Some flat-Earthers believe there's a vast conspiracy to hide the truth about the flat Earth.
+      - There's no real, unedited photos of the entire earth from space, only composites and CGI images created by space agencies.
+      - The sun and moon are much smaller and closer than mainstream science claims.
+      - Why haven't any photos or videos been captured from space that definitively show the Earth's curvature? This raises questions about the authenticity of space imagery.
+      - Wouldn't the physics of gravity on a sphere be incredibly complex and require a lot of unproven assumptions? Flat-Earthers often propose alternative explanations for gravity, such as density or acceleration.
+      - If the Earth is a sphere, why can we see such vast distances across oceans without any noticeable curve? Flat-Earthers often underestimate the scale of the Earth and the limitations of human perception at ground level.
+      - Many historical and scientific figures throughout time believed in a flat Earth. Shouldn't their observations be considered? Flat-Earthers emphasize alternative interpretations of history, claiming early civilizations had access to knowledge lost to modern science.
+      - The globe model seems to require a lot of faith and trust in authority figures, while the flat Earth model is simpler and easier to understand. Flat-Earthers often distrust mainstream science and prefer explanations that align with their intuition.
+      - The concept of a globe Earth requires complex explanations for phenomena like seasons and day/night cycles. Flat-Earthers propose alternative explanations that they find more intuitive.
+      - Flat-Earthers often point out inconsistencies in government narratives about space exploration and question the legitimacy of space agencies.
+      - Some flat-Earthers believe there's a vast conspiracy to hide the truth about the flat Earth, involving governments, scientists, and media working together.
+      - There's no real, unedited photos of the entire earth from space, only composites and CGI images created by space agencies, raising questions about the authenticity of the evidence.
+      - The sun and moon are much smaller and closer than mainstream science claims, and they move in circular paths above the flat earth, illuminating different areas in a cyclical manner.
 
   - intent: ask_quiz
     examples: |
       - we can start quiz
-      - I have learned things..please ask me quiz
+      - Yes, I'd like to take the quiz.
+      - Sure, let's do the quiz.
+      - I'd love to try the quiz.
+      - Let's go ahead with the quiz.
+      - Quiz sounds good, let's start.
+      - I want to take the quiz.
+      - I'm interested in the quiz.
+      - Yes, quiz me.
+      - Let's do the quiz before we end.
+      - I'll take the quiz.
+      - I'm ready for the quiz.
+      - I'm excited for the quiz.
+      - I'm up for the quiz.
+      - Sure, I would love to take the quiz.
+      - I'm ready to test my knowledge.
+      - I'm curious about the quiz.
+      - I'm looking forward to the quiz.
+      - I'm eager to start the quiz. 
+
+  - intent: termination
+    examples: |
+      - I would like to end the conversation.
+      - I'm no longer interested in this conversation.
+      - Thank you, but I want to stop now.
+      - Can we end our discussion here?
+      - I think I'm done for now.
+      - Let's wrap this up.
+      - I've heard enough, thanks.
+      - I'm ready to conclude our conversation.
+      - I'd like to finish up now.
+      - I'm done talking about this.
+      - I want to stop discussing this topic.
+      - Please end the chat.
+      - I don't need any more information.
+      - I'm good for now, thanks.
+      - This is where I want to end our chat.
+      - I want to log off now.
+      - Let's end this session.
+      - I'm satisfied with the discussion; let's end it.
