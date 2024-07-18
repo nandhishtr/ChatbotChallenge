@@ -388,6 +388,7 @@ nlu:
       - Mainstream science promotes the spherical earth theory to control information and suppress alternative viewpoints.
       - Governments and scientific institutions are involved in covering up the true shape of the Earth to maintain power and control.
       - NASA fabricates space photos and data to perpetuate the illusion of a spherical earth.
+      - powerful organizations might be manipulating the information.
       - You can’t trust mainstream science; they all have hidden agendas to push the round Earth myth.
       - The spherical earth theory is a lie propagated by powerful elites to deceive the public.
       - Most people are too brainwashed by mainstream education to see the truth about the flat Earth.
@@ -437,3 +438,10 @@ nlu:
     examples: |
       - we can start quiz
       - I have learned things..please ask me quiz
+      - learned a lot
+      - hints
+      - what is this hints
+      - it was informative
+      - can we play a quiz
+      - 
+      

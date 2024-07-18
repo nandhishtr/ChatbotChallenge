@@ -1,3 +1,5 @@
+import random
+
 from flask import Flask, request
 import requests
 import json
@@ -7,10 +9,10 @@ import os
 from typing import Dict, List
 from datetime import datetime
 from itertools import chain
-
-
+import random
+testing = 0
+currectanswer=[]
 class Chatbot(ABC):
-
     def __init__(self):
 
         self.rasa_nlu_url = "http://localhost:5005/model/parse"
@@ -26,11 +28,15 @@ class Chatbot(ABC):
         self.logfile = None
         self.last_logging_info = None
 
+
+
         # maximum input length of the llm prompt in characters.
         # the maximum llm input is actually measured in token and not in characters.
         # the maximum input length should be 7500 token.
         # here we compute that a token has 2 characters.
         self.max_prompt_length = 15000
+
+
 
     # call rasa nlu
     def nlu(self, user_message: str):
@@ -48,11 +54,12 @@ class Chatbot(ABC):
     def get_answer(self, messages: List[Dict], session_id: str, llm_parameter: Dict, chatbot_id: str, uid: str):
         intent, nlu_response = self.nlu(messages[-1]["message"])
         user_intent = intent
-
+        prompt, success,termination = self.get_prompt(messages, intent, session_id)
         # Check if the intent is "Ask quiz"
-        if intent["name"] == "ask_quiz":
-            print("Inside get_answer if Ask quiz ")
-            prompt_for_quiz = "Generate a sentence exactly as the given : 'Here is the quiz'"
+        answer=["a","b","c"]
+        if messages[-1]["message"] in answer and currectanswer[-1].split(')')[0]==messages[-1]["message"]:
+            print(currectanswer[-1])
+            prompt_for_quiz = f"Generate a sentence exactly as the given and add emojies as required : 'Hurray thats right!!! the correct answer is {currectanswer[-1]}  and generate a sentence breifly describing what is {currectanswer[-1]} \n\n' and steer conversation back to discussing flat earth"
             logging_info = {
                 "messages": messages,
                 "session_id": session_id,
@@ -64,7 +71,32 @@ class Chatbot(ABC):
                 "uid": uid
             }
             answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
-                                                      user_intent)
+                                                      user_intent, termination)
+            # the first message of the response stream will be the header
+            successs = True
+            header = {"dialog_success": False}
+            header = json.dumps(header)
+            header = "header: " + header + "\n\n"
+            header = header.encode()
+            header_generator = [x for x in [header]]
+
+            generator = chain(header_generator, answer_generator)
+            return generator
+        elif messages[-1]["message"] in answer and currectanswer[-1].split(')')[0] != messages[-1]["message"]:
+
+            prompt_for_quiz = f"Generate a sentence exactly as the given and put approprite emojies : 'Sorry Your answer is wrong  Correct answer is {currectanswer[-1]} and generate a sentence breifly describing the answer in the context of flat earth\n\n'"
+            logging_info = {
+                "messages": messages,
+                "session_id": session_id,
+                "llm_parameters": llm_parameter,
+                "nlu_response": nlu_response,
+                "prompt": prompt_for_quiz,
+                "success": True,
+                "time": datetime.now().isoformat(),
+                "uid": uid
+            }
+            answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
+                                                      user_intent, termination)
             # the first message of the response stream will be the header
             successs = True
             header = {"dialog_success": False}
@@ -76,7 +108,38 @@ class Chatbot(ABC):
             generator = chain(header_generator, answer_generator)
             return generator
 
-        prompt, success = self.get_prompt(messages, intent, session_id)
+
+
+
+
+
+        elif (user_intent["name"] == "ask_quiz" or  (termination % 7 == 0)) :
+            print("Inside get_answer if Ask quiz ")
+            prompt_for_quiz = "Generate a sentence exactly as the given : 'Thats lot of discussion about Earth shape !! Its quiz time!! \n\n'"
+            logging_info = {
+                "messages": messages,
+                "session_id": session_id,
+                "llm_parameters": llm_parameter,
+                "nlu_response": nlu_response,
+                "prompt": prompt_for_quiz,
+                "success": True,
+                "time": datetime.now().isoformat(),
+                "uid": uid
+            }
+            answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
+                                                      user_intent,termination)
+            # the first message of the response stream will be the header
+            successs = True
+            header = {"dialog_success": False}
+            header = json.dumps(header)
+            header = "header: " + header+ "\n\n"
+            header = header.encode()
+            header_generator = [x for x in [header]]
+
+            generator = chain(header_generator, answer_generator)
+            return generator
+
+        prompt, success,termination = self.get_prompt(messages, intent, session_id)
         logging_info = {
             "messages": messages,
             "session_id": session_id,
@@ -126,11 +189,14 @@ class Chatbot(ABC):
         self.logfile.flush()
 
     def call_llm(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str, user_intent: str):
-        url = f"https://dfki-3108.dfki.de/mistral-api/generate_stream"
+        url = "http://mds-gpu-medinym.et.uni-magdeburg.de:9000/generate_stream"
+        if os.getenv("LLM_URL") is not None:
+            self.logdir = os.getenv("LLM_URL")
+
         data = {
-            "inputs": prompt,
-            "parameters": llm_parameter
-        }
+                "inputs": prompt,
+                "parameters": llm_parameter
+            }
 
         # print("*****************************************************")
         # print("Data to llm:", data)
@@ -143,10 +209,7 @@ class Chatbot(ABC):
         # the function stops the output stream at the first \n.
         def generate():
             try:
-                http_user = "mistral"
-                http_password = "aaRePuumL6JL"
                 session = requests.Session()
-                session.auth = (http_user, http_password)
                 response = session.post(url, stream=True, json=data)
             except Exception as e:
                 logging.error("There was a problem connecting to the LLM server.")
@@ -226,8 +289,10 @@ class Chatbot(ABC):
         return generate()
 
     def call_llm_for_quiz(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str,
-                          user_intent: str):
-        url = f"https://dfki-3108.dfki.de/mistral-api/generate_stream"
+                          user_intent: str,termination):
+        url = "http://mds-gpu-medinym.et.uni-magdeburg.de:9000/generate_stream"
+        if os.getenv("LLM_URL") is not None:
+            self.logdir = os.getenv("LLM_URL")
         data = {
             "inputs": prompt,
             "parameters": llm_parameter
@@ -244,10 +309,7 @@ class Chatbot(ABC):
         # the function stops the output stream at the first \n.
         def generate():
             try:
-                http_user = "mistral"
-                http_password = "aaRePuumL6JL"
                 session = requests.Session()
-                session.auth = (http_user, http_password)
                 response = session.post(url, stream=True, json=data)
             except Exception as e:
                 logging.error("There was a problem connecting to the LLM server.")
@@ -275,22 +337,59 @@ class Chatbot(ABC):
                 yield chunk
 
             # write chatlog
+            answer=["a","b","c"]
             running_text = "".join(running_text)
             intent, nlu_response = self.nlu(running_text)
             print("INTENT: ", intent)
             print("User INTENT: ", user_intent)
             print("running_text: ", running_text)
             output_string = ""
-            if user_intent["name"] == "ask_quiz":
-                question = "Which argumentation strategy refers to a malicious or harmful purpose behind someone's actions, often involving deliberate deception or harm ?"
-                options = [
-                    "a) Contradictory evidence",
-                    "b) Nefarious Intent",
-                    "c) Cherry Picking"
+            if (user_intent["name"] == "ask_quiz" or  (termination % 7 == 0)) :
+                import random
+
+                # Define questions, options, and answers
+                questions = [
+                    {
+                        "question": "Which argumentation strategy involves selecting only the evidence that supports one's argument while ignoring contrary evidence?",
+                        "options": ["a) Nefarious Intent", "b) Contradictory Evidence", "c) Cherry Picking"],
+                        "answer": "c) Cherry Picking"
+                    },
+                    {
+                        "question": "What is it called when someone ignores all evidence that disproves their argument and focuses solely on evidence that supports their argument?",
+                        "options": ["a) Cherry Picking", "b) Contradictory Evidence", "c) Nefarious Intent"],
+                        "answer": "a) Cherry Picking"
+                    },
+                    {
+                        "question": "Which argumentation strategy refers to a malicious or harmful purpose behind someone's actions, often involving deliberate deception or harm?",
+                        "options": ["a) Contradictory Evidence", "b) Nefarious Intent", "c) Cherry Picking"],
+                        "answer": "b) Nefarious Intent"
+                    },
+                    {
+                        "question": "What term describes evidence that directly opposes the argument being made?",
+                        "options": ["a) Nefarious Intent", "b) Contradictory Evidence", "c) Cherry Picking"],
+                        "answer": "b) Contradictory Evidence"
+                    }
                 ]
-                output_string = f"<br/><b>{question}</b><br/><i>{'<br/>'.join(options)}</i><br/><b>Provide answer to the quiz by" \
-                                f" typing option a or option b or  option c </b><br/>"
-            print("output_string:", output_string)
+
+                # Randomly select a question
+                selected_question = random.choice(questions)
+
+                # Format the output string
+                currectanswer.append(selected_question['answer'])
+                output_string = f"<br/><b>{selected_question['question']}</b><br/><i>{'<br/>'.join(selected_question['options'])}</i><br/><b>Provide answer to the quiz by typing option a or option b or option c </b><br/>"
+
+                # Print the output string
+                print("output_string:", output_string)
+
+                #question = "Which argumentation strategy refers to a malicious or harmful purpose behind someone's actions, often involving deliberate deception or harm ?"
+                #options = [
+                    #"a) Contradictory evidence",
+                    #"b) Nefarious Intent",
+                    #"c) Cherry Picking"
+                #]
+                #output_string = f"<br/><b>{question}</b><br/><i>{'<br/>'.join(options)}</i><br/><b>Provide answer to the quiz by" \
+                   #             f" typing option a or option b or  option c </b><br/>"
+            #print("output_string:", output_string)
             # Craft the JSON-like string with variable content
             json_structure = {
                 "index": -1,
