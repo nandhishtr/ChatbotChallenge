@@ -40,11 +40,7 @@ class ChatbotImplementation(Chatbot):
 
     def get_intent_prompt(self, intent,latest_user_ip):
         intent_name = intent["name"]
-        answer=['a','b','c']
-        if latest_user_ip in answer:
-            intent_name == "ask quiz"
-            intent_prompt = ""
-        elif intent_name == "greeting" or intent_name == "user_shows_appreciation":
+        if intent_name == "greeting" or intent_name == "user_shows_appreciation":
             intent_prompt = prompts.greet_intent_prompt
         elif intent_name == "out_of_scope" or intent_name == "user_asks_personal_questions" or intent_name == "user_tries_to_change_the_topic":
             intent_prompt = prompts.out_of_scope_prompt
@@ -58,9 +54,6 @@ class ChatbotImplementation(Chatbot):
             intent_prompt = prompts.provided_evidence_against_flat_earth
         elif intent_name == "provided_evidence_for_spherical_earth":
             intent_prompt = prompts.provided_evidence_for_spherical_earth
-        elif (testing % 7 == 0)+2:
-            intent_name = "ask_quiz"
-            intent_prompt = prompts.quiz_intent_prompt
 
         else:
             intent_prompt = prompts.argumentation_intent_prompt
@@ -127,9 +120,6 @@ class ChatbotImplementation(Chatbot):
         #print(f"Sentiment: {sentiment} , Intent: {intent_name} ", "latest input :", latest_user_ip)
         #print("*********************")
         self.update_session_state(intent, session_id)
-        global testing
-        testing=testing+1
-        print(testing)
         intent_prompt, intent_name = self.get_intent_prompt(intent,latest_user_ip)
         session_is_successful = self.is_session_successful(session_id)
 
@@ -153,4 +143,4 @@ class ChatbotImplementation(Chatbot):
             #print("Prompt to llm:", prompt)
             #print("*****************************************************")
 
-        return prompt, session_is_successful, testing
+        return prompt, session_is_successful

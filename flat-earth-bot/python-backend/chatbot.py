@@ -10,7 +10,8 @@ from typing import Dict, List
 from datetime import datetime
 from itertools import chain
 import random
-testing = 0
+hinting = 0
+hintCount=0
 currectanswer=[]
 class Chatbot(ABC):
     def __init__(self):
@@ -54,12 +55,11 @@ class Chatbot(ABC):
     def get_answer(self, messages: List[Dict], session_id: str, llm_parameter: Dict, chatbot_id: str, uid: str):
         intent, nlu_response = self.nlu(messages[-1]["message"])
         user_intent = intent
-        prompt, success,termination = self.get_prompt(messages, intent, session_id)
         # Check if the intent is "Ask quiz"
         answer=["a","b","c"]
         if messages[-1]["message"] in answer and currectanswer[-1].split(')')[0]==messages[-1]["message"]:
             print(currectanswer[-1])
-            prompt_for_quiz = f"Generate a sentence exactly as the given and add emojies as required : 'Hurray thats right!!! the correct answer is {currectanswer[-1]}  and generate a sentence breifly describing what is {currectanswer[-1]} \n\n' and steer conversation back to discussing flat earth"
+            prompt_for_quiz = f"Generate a sentence exactly as the given and add emojies as required : 'Hurray thats right!!! the correct answer is {currectanswer[-1]}  and generate a sentence breifly describing what is {currectanswer[-1]}then steer the conversation back to flat earth \n\n' "
             logging_info = {
                 "messages": messages,
                 "session_id": session_id,
@@ -71,7 +71,7 @@ class Chatbot(ABC):
                 "uid": uid
             }
             answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
-                                                      user_intent, termination)
+                                                      user_intent)
             # the first message of the response stream will be the header
             successs = True
             header = {"dialog_success": False}
@@ -84,7 +84,7 @@ class Chatbot(ABC):
             return generator
         elif messages[-1]["message"] in answer and currectanswer[-1].split(')')[0] != messages[-1]["message"]:
 
-            prompt_for_quiz = f"Generate a sentence exactly as the given and put approprite emojies : 'Sorry Your answer is wrong  Correct answer is {currectanswer[-1]} and generate a sentence breifly describing the answer in the context of flat earth\n\n'"
+            prompt_for_quiz = f"Generate a sentence exactly as the given and put approprite emojies : 'Sorry Your answer is wrong  Correct answer is {currectanswer[-1]} and generate a sentence breifly describing the answer in the context of flat earth, then steer the conversation back to flat earth\n\n'"
             logging_info = {
                 "messages": messages,
                 "session_id": session_id,
@@ -96,7 +96,7 @@ class Chatbot(ABC):
                 "uid": uid
             }
             answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
-                                                      user_intent, termination)
+                                                      user_intent)
             # the first message of the response stream will be the header
             successs = True
             header = {"dialog_success": False}
@@ -108,12 +108,8 @@ class Chatbot(ABC):
             generator = chain(header_generator, answer_generator)
             return generator
 
+        elif user_intent["name"] == "ask_quiz" or  (hinting == 2) :
 
-
-
-
-
-        elif (user_intent["name"] == "ask_quiz" or  (termination % 7 == 0)) :
             print("Inside get_answer if Ask quiz ")
             prompt_for_quiz = "Generate a sentence exactly as the given : 'Thats lot of discussion about Earth shape !! Its quiz time!! \n\n'"
             logging_info = {
@@ -127,7 +123,7 @@ class Chatbot(ABC):
                 "uid": uid
             }
             answer_generator = self.call_llm_for_quiz(prompt_for_quiz, llm_parameter, logging_info, chatbot_id,
-                                                      user_intent,termination)
+                                                      user_intent)
             # the first message of the response stream will be the header
             successs = True
             header = {"dialog_success": False}
@@ -139,7 +135,7 @@ class Chatbot(ABC):
             generator = chain(header_generator, answer_generator)
             return generator
 
-        prompt, success,termination = self.get_prompt(messages, intent, session_id)
+        prompt, success = self.get_prompt(messages, intent, session_id)
         logging_info = {
             "messages": messages,
             "session_id": session_id,
@@ -243,21 +239,26 @@ class Chatbot(ABC):
             print("User INTENT: ", user_intent)
             print("running_text: ", running_text)
             output_string = ""
+            global hinting
             if intent["name"] == "nefarious_intent":
+                hinting = hinting + 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                     You can observe nefarious intent in my current response. "Nefarious intent" refers to a malicious 
                     or harmful purpose behind someone's actions, often involving deliberate deception or harm. </i></span>"""
             elif intent["name"] == "cherry_picking_data":
+                hinting = hinting + 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                         You can observe cherry-picking data in my current response. "Cherry-picking data" refers to 
                         selectively presenting only the evidence that supports a particular viewpoint, 
                         while ignoring or downplaying evidence that contradicts it. </i></span>"""
             elif intent["name"] == "contradictory_evidence":
+                hinting = hinting + 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                         You can observe contradictory evidence explanations in my current response. Flat-Earthers 
                         often propose alternative explanations for observations that seem to contradict the flat Earth model. 
                         These explanations attempt to reconcile their beliefs with established scientific principles. </i></span>"""
             elif intent["name"] == "overriding_suspicion":
+                hinting = hinting + 1
                 output_string = """<br/> <span style="color:blue;"><b><i> Hint: </i></b></span> <span style="color:green;"><i>
                         You can observe overriding suspicion tactics in my current response. Flat-Earthers 
                         sometimes disregard evidence for a spherical Earth due to skepticism of authority figures, 
@@ -289,7 +290,7 @@ class Chatbot(ABC):
         return generate()
 
     def call_llm_for_quiz(self, prompt: str, llm_parameter: Dict, logging_info: Dict, chatbot_id: str,
-                          user_intent: str,termination):
+                          user_intent: str):
         url = "http://mds-gpu-medinym.et.uni-magdeburg.de:9000/generate_stream"
         if os.getenv("LLM_URL") is not None:
             self.logdir = os.getenv("LLM_URL")
@@ -308,6 +309,8 @@ class Chatbot(ABC):
         # also pass the stream to the frontend
         # the function stops the output stream at the first \n.
         def generate():
+            global hinting
+            global hintCount
             try:
                 session = requests.Session()
                 response = session.post(url, stream=True, json=data)
@@ -344,8 +347,10 @@ class Chatbot(ABC):
             print("User INTENT: ", user_intent)
             print("running_text: ", running_text)
             output_string = ""
-            if (user_intent["name"] == "ask_quiz" or  (termination % 7 == 0)) :
-                import random
+            if (user_intent["name"] == "ask_quiz" or  hinting == 2) :
+                # reset hinting
+                hinting = 0
+
 
                 # Define questions, options, and answers
                 questions = [
@@ -372,12 +377,12 @@ class Chatbot(ABC):
                 ]
 
                 # Randomly select a question
-                selected_question = random.choice(questions)
+                selected_question = questions[hintCount]['question']
 
                 # Format the output string
-                currectanswer.append(selected_question['answer'])
-                output_string = f"<br/><b>{selected_question['question']}</b><br/><i>{'<br/>'.join(selected_question['options'])}</i><br/><b>Provide answer to the quiz by typing option a or option b or option c </b><br/>"
-
+                currectanswer.append(questions[hintCount]['answer'])
+                output_string = f"<br/><b>{questions[hintCount]['question']}</b><br/><i>{'<br/>'.join(questions[hintCount]['options'])}</i><br/><b>Provide answer to the quiz by typing option a or option b or option c </b><br/>"
+                hintCount = hintCount + 1
                 # Print the output string
                 print("output_string:", output_string)
 
