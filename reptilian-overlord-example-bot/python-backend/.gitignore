@@ -1,6 +1,0 @@
-log.txt
-logs/
-.pyc
-__pycache__/
-actions/__pycache__/
-*.pyc

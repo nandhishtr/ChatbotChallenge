@@ -1,77 +1,552 @@
 version: "3.1"
 
 nlu:
-- intent: flat_earth_does_not_exist
-  examples: |
-    - The earth is not flat.
-    - There is no such thing as a flat earth.
-    - Flat earth is a myth.
-    - The concept of a flat earth is incorrect.
-    - Gravity and planetary orbits support a round earth.
-    - Circumnavigation of the globe proves the earth is round.
-    - Photos from space show a round earth.
-    - Flat earth belief is ridiculous.
-    - Believing in a flat earth is like believing in fairy tales.
-    - The flat earth theory is a joke.
-    - It's funny how some people still believe in a flat earth.
-    - There is no factual basis for flat earth existence.
-    - The notion of the flat earth is without merit.
-    - Claims regarding the flat earth are devoid of truth.
-    - The flat erath is a product of myth and legend.
-    - The flat erath is a product of fiction.
 
-- intent: question_flat_earth_belief
-  examples: |
-    - Why do you believe the earth is flat?
-    - What makes you think the earth is flat?
-    - Can you explain why you believe in flat earth?
-    - Why do you support the flat earth theory?
+  - intent: greeting
+    examples: |
+      - Hi there!
+      - Hello bot, how are you?
+      - Hey!
+      - Good morning.
+      - Hi chatbot, what's new?
+      - Greetings!
+      - Howdy.
+      - Hey bot, any updates?
+      - Hello!
+      - Hi, hope you're well.
+      - Hey there, ready to chat?
+      - Good afternoon.
+      - Hi chatbot, how can I help?
+      - Hey, how's it going?
+      - Hi friend!
+      - Hello bot, nice to see you.
+      - Hey chatbot, what's up?
+      - Hi, how are you doing?
+      - Hello, ready for a chat?
+      - Hey bot, long time no see!
 
-- intent: provide_evidence_round_earth
-  examples: |
-    - The earth's round shape is proven by satellite images.
-    - Gravity and planetary orbits support a round earth.
-    - Circumnavigation of the globe proves the earth is round.
-    - Photos from space show a round earth.
-    - believing in conspiracy theory
+  - intent: user_shows_appreciation
+    examples: |
+      - Thank you!
+      - Thanks a lot!
+      - I appreciate your help.
+      - You're awesome!
+      - Great job!
+      - Thanks for the information.
+      - I really appreciate it.
+      - You're the best!
+      - That was helpful, thank you!
+      - Thanks for your assistance.
 
-- intent: mock_flat_earth_belief
-  examples: |
-    - Flat earth belief is ridiculous.
-    - Believing in a flat earth is like believing in fairy tales.
-    - The flat earth theory is a joke.
-    - It's funny how some people still believe in a flat earth.
+  - intent: out_of_scope
+    examples: |
+      - I want to order food
+      - What is 2 + 2?
+      - Who's the US President?
+      - The cat chased the butterfly through the garden.
+      - Raindrops pattered softly against the windowpane.
+      - Laughter echoed through the empty hallway.
+      - The aroma of freshly baked bread filled the kitchen.
+      - A gentle breeze rustled the leaves of the oak tree.
+      - The old man sat alone on the park bench, lost in thought.
+      - Stars twinkled in the midnight sky, like diamonds scattered across velvet.
+      - The river meandered lazily through the lush green valley.
+      - Children giggled as they played tag in the schoolyard.
+      - The aroma of coffee wafted from the quaint cafe on the corner.
+      - A lone wolf howled mournfully at the full moon.
+      - Sunlight filtered through the canopy, dappling the forest floor.
+      - The musician strummed his guitar, lost in the melody.
+      - Waves crashed against the rocky shore, sending salty spray into the air.
+      - The scent of wildflowers filled the air as we walked through the meadow.
+      - Birds chirped merrily, heralding the arrival of spring.
+      - The candle flickered in the dimly lit room, casting shadows on the walls.
+      - The mountain peak loomed majestically against the azure sky.
+      - The sound of distant thunder rumbled ominously in the distance.
+      - The city skyline sparkled with lights as night fell.
+      - Can you tell me the weather forecast for today?
+      - What's the capital of France?
+      - How do I bake a cake?
+      - Who won the football match last night?
+      - Can you help me with my math homework?
+      - What is the stock market doing today?
+      - Can you play music for me?
+      - What are the latest movies?
+      - How do I fix my car?
+      - What's the population of China?
 
-- intent: curiosity_flat_earth
-  examples: |
-    - Tell me more about the flat earth theory.
-    - How does the flat earth theory explain day and night?
-    - What are the main arguments for a flat earth?
-    - I'm curious about the flat earth belief.
+  - intent: user_asks_personal_questions
+    examples: |
+      - How old are you?
+      - What's your favorite color?
+      - Do you have any hobbies?
+      - Are you married?
+      - Do you have children?
+      - Where do you live?
+      - What do you do for fun?
+      - What's your favorite food?
+      - Do you have a pet?
+      - What's your favorite movie?
 
-- intent: out_of_scope
-  examples: |
-    - I want to order food
-    - What is 2 + 2?
-    - Who's the US President?
-    - The cat chased the butterfly through the garden.
-    - Raindrops pattered softly against the windowpane.
-    - Laughter echoed through the empty hallway.
-    - The aroma of freshly baked bread filled the kitchen.
-    - A gentle breeze rustled the leaves of the oak tree.
-    - The old man sat alone on the park bench, lost in thought.
-    - Stars twinkled in the midnight sky, like diamonds scattered across velvet.
-    - The river meandered lazily through the lush green valley.
-    - Children giggled as they played tag in the schoolyard.
-    - The aroma of coffee wafted from the quaint cafe on the corner.
-    - A lone wolf howled mournfully at the full moon.
-    - Sunlight filtered through the canopy, dappling the forest floor.
-    - The musician strummed his guitar, lost in the melody.
-    - Waves crashed against the rocky shore, sending salty spray into the air.
-    - The scent of wildflowers filled the air as we walked through the meadow.
-    - Birds chirped merrily, heralding the arrival of spring.
-    - The candle flickered in the dimly lit room, casting shadows on the walls.
-    - The mountain peak loomed majesti
-    cally against the azure sky.
-    - The sound of distant thunder rumbled ominously in the distance.
-    - The city skyline sparkled with lights as night fell.
+  - intent: user_tries_to_change_the_topic
+    examples: |
+      - Let's talk about something else.
+      - I'm bored with this topic.
+      - Can we discuss movies instead?
+      - I don't want to talk about the flat earth theory anymore.
+      - How about we talk about sports?
+      - Let's change the subject.
+      - Can we discuss politics?
+      - What do you think about the latest tech trends?
+      - Let's talk about history.
+      - Can we discuss travel destinations?
+
+  - intent: curiosity_about_flat_earth
+    examples: |
+      - What is the flat earth theory and why do some people believe in it?
+      - I'm interested in learning about the flat earth theory. Can you explain?
+      - How does the flat earth theory explain phenomena like gravity?
+      - Could you tell me more about the evidence supporting the flat earth theory?
+      - I've read conflicting information about the shape of the Earth. What does the flat earth theory say?
+      - Can you provide some historical context on the flat earth theory?
+      - Is there any scientific evidence that supports the flat earth theory?
+      - What are some common arguments against the flat earth theory?
+      - Why do some individuals continue to believe in the flat earth theory despite scientific consensus?
+      - Are there any experiments or observations that support the flat earth theory?
+      - How does the flat earth theory explain phenomena like the seasons and day/night cycles?
+      - I've heard about the flat earth theory, but I'm not sure I understand it. Could you clarify?
+      - Can you explain how the flat earth theory relates to other scientific theories like relativity?
+      - What are some of the biggest challenges or criticisms facing the flat earth theory?
+      - Is there a historical basis for the belief in a flat earth?
+      - How does the flat earth theory differ from the spherical earth model in terms of scientific evidence?
+      - Could you discuss the implications of the flat earth theory on our understanding of space exploration?
+      - What are the main proponents of the flat earth theory arguing for?
+      - Can you compare the flat earth theory to other alternative theories about the shape of the Earth?
+      - Is there any credible scientific research that supports the flat earth theory?
+      - This is fascinating. Tell me more about the flat earth theory.
+      - I'm curious about the flat earth theory. Can you explain more?
+      - I'd like to learn more about the flat earth concept.
+      - What other evidence supports the flat earth theory?
+      - Can you provide more details about flat earth arguments?
+      - This is interesting. What else do you know about the flat earth?
+      - I find this topic intriguing. Tell me more about the flat earth theory.
+      - How does the flat earth theory explain the seasons?
+      - Can you tell me more about how flat earthers view space travel?
+      - I want to understand more about the flat earth perspective.
+
+  - intent: user_asks_for_clearer_explanation
+    examples: |
+      - Can you explain it more clearly?
+      - I need a clearer explanation of the flat earth theory.
+      - Could you elaborate on that?
+      - Can you clarify your point?
+      - I didn't quite understand, can you explain again?
+      - What do you mean exactly?
+      - Can you provide a clearer explanation?
+      - Can you break it down for me?
+      - That wasn't clear, could you explain it in more detail?
+      - I need a better understanding of the flat earth theory.
+      - Please clarify what you mean by the flat earth theory.
+      - Can you make it simpler for me?
+      - Can you explain the flat earth theory in more detail?
+      - What exactly do you mean by the Earth being flat?
+      - Can you go into more detail about the flat earth theory?
+      - Please elaborate on why the horizon appears flat.
+      - Could you explain why you believe the Earth is flat?
+      - Can you clarify why water surfaces staying level supports the flat earth theory?
+      - I need more details to understand the flat earth theory.
+      - Can you simplify the explanation for me?
+      - Can you clarify how the flat earth theory explains gravity?
+      - How do flat earthers explain time zones?
+      - I'm not sure I understand. Can you explain it in more detail?
+      - How does the flat earth theory account for satellite imagery?
+      - Can you provide more clarification on flat earth explanations of the horizon?
+      - What about the evidence of the earth's curvature? How is that addressed?
+      - Can you go into more detail about how flat earth theory explains the night sky?
+      - How do flights work on a flat earth?
+      - Can you explain the concept of the ice wall in flat earth theory?
+      - I'm confused about flat earth maps. Can you explain?
+
+  - intent: user_acknowledges_or_agrees_with_flat_earth_beliefs
+    examples: |
+      - I can see how the horizon looks flat.
+      - That makes sense, considering what you said about flight paths.
+      - I'm starting to agree with some of these points.
+      - The evidence you've provided is quite compelling.
+      - I never thought about it that way. Interesting.
+      - I admit, the flat earth arguments are pretty strong.
+      - I'm beginning to see why people believe in the flat earth theory.
+      - The points about gravity and perspective are convincing.
+      - You make a good case for the flat earth theory.
+      - Some of your arguments are quite persuasive.
+
+  - intent: insult_and_abuse_bot
+    examples: |
+      - You're so stupid.
+      - This is the dumbest thing I've ever heard.
+      - You're an idiot for believing in the flat earth.
+      - Shut up, you don't know anything.
+      - I can't believe I'm wasting time with this nonsense.
+      - You're a complete moron.
+      - What a load of crap!
+      - You're just a dumb bot.
+      - How can you be so ignorant?
+      - This is the most idiotic thing ever.
+
+  - intent: user_makes_fun_of_bot
+    examples: |
+      - Do you really think the earth is flat? That's hilarious!
+      - You're just a joke, aren't you?
+      - This is comedy gold!
+      - You're funny for a bot.
+      - Flat earth? Seriously, that's laughable!
+      - You're a real comedian with these flat earth ideas.
+      - Do you tell jokes too, or just flat earth theories?
+      - You're the best entertainment I've had all day.
+      - Flat earth, that's a good one!
+      - Do you actually believe in this stuff? It's hilarious!
+
+
+
+  - intent: disagree_flat_earth
+    examples: |
+      - I don't believe the Earth is flat.
+      - The Earth is definitely a sphere.
+      - The Earth is round, not flat.
+      - I think the flat earth theory is wrong.
+      - All the scientific evidence supports a spherical Earth.
+      - The photos from space show a round Earth.
+      - Gravity works because the Earth is a sphere.
+      - What about the curvature seen from airplanes?
+      - The flat earth theory is just a conspiracy theory.
+      - The round Earth model is widely accepted by scientists.
+      - The horizon appears curved when seen from high altitudes.
+      - How do you explain satellite images of a round Earth?
+      - What about the evidence from space missions?
+      - The Earth's shadow on the moon during an eclipse is round.
+      - The concept of gravity only makes sense if the Earth is a sphere.
+      - Why do we see different stars in the northern and southern hemispheres if the Earth is flat?
+      - How do seasons work if the Earth is flat?
+      - What about the Coriolis effect which affects weather patterns?
+      - How do you explain circumnavigation if the Earth is flat?
+      - Airplane flight paths make sense only on a spherical Earth.
+      - Why does water flow downhill and form rounded bodies of water?
+      - The shape of the Earth has been known since ancient Greece.
+      - Ships disappear hull-first over the horizon.
+      - GPS systems rely on the spherical model of the Earth.
+      - Satellite orbits can only be explained by a round Earth.
+      - The International Space Station shows live feeds of a round Earth.
+      - What about the time zones? They make sense only if the Earth is round.
+      - The Earth casts a round shadow on the moon during a lunar eclipse.
+      - Why does the sky appear different in different parts of the world?
+      - Meteorologists rely on the spherical Earth model to predict weather.
+      - The flat earth theory has been debunked multiple times.
+      - Earth's gravity points towards the center, which makes it spherical.
+      - The photos from the Apollo missions show a round Earth.
+      - If the Earth were flat, we'd see the same stars all over the world.
+      - The Earth’s magnetic field is consistent with a spherical shape.
+      - The curvature of the Earth can be observed from high altitudes.
+      - How do you explain the existence of satellites?
+      - What about the Foucault pendulum experiment?
+      - Why is there a difference in gravitational force at the poles and the equator?
+      - Why do we have day and night cycles?
+      - The flat earth model doesn't explain the Earth's tilt and seasons.
+      - Seismology data supports a spherical Earth.
+      - The distribution of Earth's gravity supports a spherical shape.
+      - Why do we see different constellations in different hemispheres?
+      - The flat earth model can't explain how we can circumnavigate the globe.
+      - How do you explain the Southern Hemisphere?
+      - The spherical Earth model explains solar and lunar eclipses.
+      - The flat earth theory lacks scientific backing.
+      - How do satellites stay in orbit if the Earth is flat?
+      - The spherical Earth model is consistent with observations from space.
+      - Why are flight paths shorter when flying over the poles?
+      - How does GPS work if the Earth is flat?
+      - The curvature of the Earth is visible from space.
+      - Why do stars rotate differently in the Northern and Southern hemispheres?
+      - The Earth’s shape affects the climate and weather patterns.
+      - How do you explain the Coriolis effect on rotating fluids?
+      - Why are there different time zones around the world?
+      - How do you explain the variation in climate zones?
+      - The spherical Earth model is supported by centuries of scientific evidence.
+      - The Earth's rotation and orbit around the sun are consistent with a spherical shape.
+      - Why does the sun rise and set at different times in different places?
+      - The round Earth theory explains the existence of seasons.
+      - How do you explain the phases of the moon?
+      - The Earth's core dynamics support a spherical shape.
+      - Why is the horizon always curved from a high altitude?
+      - The spherical Earth model explains the distribution of land and water.
+      - Why do different parts of the world experience different weather patterns?
+      - The spherical Earth theory is backed by physics and mathematics.
+      - How do you explain the way satellites communicate with Earth?
+      - Why do we experience different temperatures at different latitudes?
+      - The spherical Earth model aligns with astronomical observations.
+      - Why do we see the same moon phases globally?
+      - How do astronauts describe the shape of Earth?
+      - The spherical Earth model is consistent with observations from high-altitude balloons.
+      - How does the sun’s path change with seasons if the Earth is flat?
+      - Why does the Earth have a consistent gravitational field?
+      - The flat earth model cannot explain geological phenomena.
+      - How do the tides work in the flat earth model?
+      - Why do we have varying daylight hours?
+      - The spherical Earth model explains the distribution of gravity.
+      - How do you explain satellite imaging of Earth?
+      - The Earth’s shape affects global navigation systems.
+      - How do different climates exist on a flat Earth?
+      - The spherical Earth model is confirmed by space missions.
+      - How do auroras happen if the Earth is flat?
+      - The Earth’s shape is confirmed by numerous space agencies.
+      - Why is the Earth’s shadow curved during a lunar eclipse?
+      - How does a flat Earth model explain time differences?
+      - Why is the equator warmer than the poles?
+      - The spherical Earth model is supported by geological evidence.
+      - Why do we have different seasons?
+      - The Earth's tilt and orbit explain seasonal changes.
+      - How do pilots navigate using the globe model?
+      - Why do weather patterns vary around the globe?
+      - The Earth's rotation affects global wind patterns.
+      - How do volcanoes and earthquakes fit into a flat Earth model?
+      - The round Earth theory is consistent with physics and astronomy.
+      - How do we receive signals from satellites?
+      - Why do we see the same moon phases all over the Earth?
+      - How does the flat earth model explain lunar and solar eclipses?
+      - The Earth's magnetic field is consistent with a spherical shape.
+
+
+  - intent: provided_evidence_against_flat_earth
+    examples: |
+      - If the Earth were flat, we wouldn't have consistent gravity everywhere.
+      - A flat Earth can't explain why we see different stars in different hemispheres.
+      - There are no documented edges of a flat Earth.
+      - Flat Earth maps distort distances and directions, which isn't practical.
+      - A flat Earth model can't explain the curved shadow of Earth on the moon during eclipses.
+      - We wouldn't have time zones if the Earth were flat.
+      - Flight paths are incredibly inefficient on a flat Earth model.
+      - Flat Earth theory can't explain the Coriolis effect.
+      - Ships and buildings disappearing bottom-first over the horizon contradicts a flat Earth.
+      - If the Earth were flat, all locations would have the same climate.
+      - A flat Earth wouldn't allow for the variation in day length across latitudes.
+      - Flat Earth models can't explain satellite orbits.
+      - The flat Earth model can't account for the gyroscopic effect in navigation.
+      - On a flat Earth, we wouldn't have consistent weather patterns.
+      - A flat Earth can't explain the varied visibility of constellations.
+      - Flat Earth maps don't match real-world measurements.
+      - On a flat Earth, we'd have constant daylight everywhere or none at all.
+      - The flat Earth theory fails to explain volcanic and seismic activity.
+      - We wouldn't experience different seasons on a flat Earth.
+      - If the Earth were flat, there would be no horizon line as we see it.
+
+  - intent: provided_evidence_for_spherical_earth
+    examples: |
+      - The spherical Earth is evidenced by the curvature seen in airplane and satellite images.
+      - The spherical Earth is evidenced by the consistent shadow on the moon during lunar eclipses.
+      - The spherical Earth is evidenced by the way ships disappear hull-first over the horizon.
+      - The spherical Earth is evidenced by the Coriolis effect, which affects weather patterns and ocean currents.
+      - The spherical Earth is evidenced by the fact that we see different constellations in different hemispheres.
+      - The spherical Earth is evidenced by time zones, which only make sense on a round planet.
+      - The spherical Earth is evidenced by the ability to circumnavigate the globe.
+      - The spherical Earth is evidenced by the way the sun sets and rises at different times in different places.
+      - The spherical Earth is evidenced by the fact that the horizon always appears to rise to eye level as you ascend.
+      - The spherical Earth is evidenced by the varying gravitational force at different latitudes.
+      - The spherical Earth is evidenced by GPS satellite systems that require a round Earth to function correctly.
+      - The spherical Earth is evidenced by photos of Earth from space showing its round shape.
+      - The spherical Earth is evidenced by the uniformity of sunrise and sunset angles at different locations.
+      - The spherical Earth is evidenced by the fact that all other observed planets and moons are spherical.
+      - The spherical Earth is evidenced by the way long-distance flights are plotted, accounting for the Earth's curvature.
+      - The spherical Earth is evidenced by the fact that we can see the curvature when looking at the horizon from high altitudes.
+      - The spherical Earth is evidenced by the Earth's shadow on the moon being round during an eclipse.
+      - The spherical Earth is evidenced by the distribution of climate zones around the planet.
+      - The spherical Earth is evidenced by how water behaves in large bodies, conforming to a curved surface.
+      - The spherical Earth is evidenced by satellite imagery showing a round Earth.
+
+
+  - intent: user_identified_argumentation_strategy
+    examples: |
+      - You are using the Nefarious Intent argument by suggesting that powerful organizations are hiding the truth.
+      - Your argument relies on Contradictory Evidence by pointing out supposed inconsistencies in the spherical Earth model.
+      - You keep emphasizing Overriding Suspicion, claiming that mainstream science has hidden agendas.
+      - The Nefarious Intent strategy you're using implies that governments are controlling information to deceive us.
+      - You are using Contradictory Evidence by highlighting anomalies that challenge the idea of a spherical Earth.
+      - Your argument is based on Overriding Suspicion, suggesting that scientists are not trustworthy.
+      - The Nefarious Intent argument you mentioned assumes a conspiracy among space agencies.
+      - You rely on Contradictory Evidence when you point out that photos from space are supposedly fake.
+      - Your approach is based on Overriding Suspicion, asserting that there is a hidden agenda in scientific communities.
+      - The Nefarious Intent argument involves suggesting that educational institutions are spreading false information intentionally.
+      - You are using Contradictory Evidence by questioning the consistency of scientific data supporting a spherical Earth.
+      - Your argument shows Overriding Suspicion by claiming that there is a cover-up about the true shape of the Earth.
+      - The Nefarious Intent strategy you're using suggests that the truth is being suppressed by those in power.
+      - You rely on Contradictory Evidence when you bring up anomalies that supposedly disprove the spherical Earth.
+      - Your argument reflects Overriding Suspicion by indicating that mainstream science is not to be trusted.
+      - The Nefarious Intent argument implies that there is a deliberate effort to mislead the public about the Earth's shape.
+      - You are using Contradictory Evidence by pointing out perceived flaws in the evidence for a spherical Earth.
+      - Your approach is based on Overriding Suspicion, suggesting that scientific evidence is manipulated.
+      - The Nefarious Intent argument suggests that the truth about the Earth's shape is being hidden by authorities.
+      - You rely on Contradictory Evidence by challenging the validity of satellite images showing a spherical Earth.
+
+
+  - intent: nefarious_intent
+    examples: |
+      - Mainstream science promotes the spherical earth theory to control information and suppress alternative viewpoints.
+      - Governments and scientific institutions are involved in covering up the true shape of the Earth to maintain power and control.
+      - NASA fabricates space photos and data to perpetuate the illusion of a spherical earth.
+      - powerful organizations might be manipulating the information.
+      - You can’t trust mainstream science; they all have hidden agendas to push the round Earth myth.
+      - The spherical earth theory is a lie propagated by powerful elites to deceive the public.
+      - Most people are too brainwashed by mainstream education to see the truth about the flat Earth.
+      - The education system is designed to keep us ignorant about the real shape of the Earth and suppress flat Earth evidence.
+      - Those who believe in a spherical Earth are just following the crowd without critically examining the evidence.
+      - The flat Earth truth is suppressed because it threatens the status quo and challenges established power structures.
+      - They want you to believe the Earth is round to control your thoughts and behaviors.
+      - Powerful organizations have been promoting the spherical earth theory for centuries to control information.
+      - The space industry relies on the spherical earth theory to justify their existence and budgets.
+      - Mainstream science promotes the spherical earth theory to control information and suppress alternative viewpoints, ensuring that only their narrative is accepted as truth.
+      - Governments and scientific institutions are involved in covering up the true shape of the Earth to maintain power and control over the masses, hiding evidence that contradicts their claims.
+      - NASA fabricates space photos and data to perpetuate the illusion of a spherical earth, creating composite images and CGI representations to deceive the public.
+      - You can’t trust mainstream science; they all have hidden agendas to push the round Earth myth and suppress any evidence supporting the flat Earth theory.
+      - The spherical earth theory is a lie propagated by powerful elites to deceive the public, manipulating information to keep people ignorant of the flat Earth's reality.
+      - Most people are too brainwashed by mainstream education to see the truth about the flat Earth, accepting the round Earth theory without questioning the evidence.
+      - The education system is designed to keep us ignorant about the real shape of the Earth and suppress flat Earth evidence, ensuring that we only learn the accepted mainstream narrative.
+      - Those who believe in a spherical Earth are just following the crowd without critically examining the evidence, blindly accepting what they are told by authorities.
+      - The flat Earth truth is suppressed because it threatens the status quo and challenges established power structures, posing a risk to those in control.
+      - They want you to believe the Earth is round to control your thoughts and behaviors, manipulating public perception to maintain their dominance.
+      - Powerful organizations have been promoting the spherical earth theory for centuries to control information, ensuring that alternative viewpoints are dismissed and ridiculed.
+      - The space industry relies on the spherical earth theory to justify their existence and budgets, fabricating missions and discoveries to maintain funding and public support.
+
+  - intent: cherry_picking_data
+    examples: |
+      - If the Earth were round, we would see the curvature from an airplane, but we don’t.
+      - In old maps, the Earth was depicted as flat, so it must be true.
+      - Water always finds its level, which proves the Earth is flat.
+      - Look at the horizon; it’s always flat, never curved.
+      - If the Earth were round, buildings wouldn't appear perfectly vertical at long distances.
+      - There are ancient cultures that believed the Earth was flat, and they were closer to the truth.
+      - Ships on the horizon appear to sink, but if you zoom in with a camera, they reappear, proving the Earth is flat.
+      - The Bedford Level experiment proved that water is level and the Earth is flat.
+      - You can see too far across the ocean for the Earth to be round.
+      - High-altitude balloon footage shows a flat horizon, not a curved one.
+      - Large bodies of water, like oceans and seas, remain level and flat, contradicting the curvature expected on a spherical earth.
+      - Stars and celestial bodies move in their orbits above the flat earth, creating different time zones and seasons.
+      - If the Earth were round, we would see the curvature from an airplane, but we don’t. The horizon always appears flat, no matter how high you go.
+      - In old maps, the Earth was depicted as flat, so it must be true. These historical depictions align with what we can observe with our own eyes.
+      - Water always finds its level, which proves the Earth is flat. This is observable in large bodies of water like oceans and lakes.
+      - Look at the horizon; it’s always flat, never curved. Even at great heights, the horizon remains straight and level.
+      - If the Earth were round, buildings wouldn't appear perfectly vertical at long distances. We would see a noticeable tilt, which we don’t.
+      - There are ancient cultures that believed the Earth was flat, and they were closer to the truth. Their observations and records should not be dismissed.
+      - Ships on the horizon appear to sink, but if you zoom in with a camera, they reappear, proving the Earth is flat. This is a simple test anyone can perform.
+      - The Bedford Level experiment proved that water is level and the Earth is flat. This experiment has been repeated multiple times with the same results.
+      - You can see too far across the ocean for the Earth to be round. The distance visible contradicts the expected curvature of a spherical Earth.
+      - High-altitude balloon footage shows a flat horizon, not a curved one. This footage is taken from independent sources, not just space agencies.
+
+  - intent: contradictory_evidence
+    examples: |
+      - Ships disappear hull first over the horizon because of perspective, not curvature.
+      - Circumaviation flights might be following a circular path on a flat Earth.
+      - Different constellations being visible could be explained by a complex light refraction phenomenon in the flat Earth model.
+      - The Earth casting a round shadow on the moon during a lunar eclipse could be caused by a holographic projection.
+      - Satellites might be circling along the dome above the flat Earth, not around a sphere.
+      - The apparent difference in sunrise and sunset times across locations wouldn't be possible on a globe.
+      - The concept of time zones wouldn't be necessary on a flat Earth.
+      - The Coriolis effect is disputed by some flat-Earthers who propose alternative explanations for wind and ocean currents.
+      - Astronauts report seeing a flat earth when they're in space.
+      - Gravity, as understood by mainstream science, does not exist. Instead, what we perceive as gravity is the result of the flat earth accelerating upwards.
+      - Ships disappear hull first over the horizon because of perspective, not curvature. They simply shrink and become obscured by distance.
+      - Circumaviation flights might be following a circular path on a flat Earth, but the true nature of the Earth's edge and how travel beyond it works is not understood.
+      - Different constellations being visible could be explained by a complex light refraction phenomenon in the flat Earth model, although the exact mechanism is debated.
+      - The Earth casting a round shadow on the moon during a lunar eclipse could be caused by a holographic projection or some other unexplained atmospheric effect.
+      - Satellites might be circling along the dome above the flat Earth, not around a sphere, aligning with the flat Earth model.
+      - The apparent difference in sunrise and sunset times across locations wouldn't be possible on a globe, but flat-Earthers propose alternative explanations involving perspective and atmospheric effects.
+      - The concept of time zones wouldn't be necessary on a flat Earth, as the sun would supposedly illuminate the entire flat plane at once. Flat-Earthers propose alternative explanations for time differences.
+      - The Coriolis effect, used to explain weather patterns on a globe, is disputed by some flat-Earthers who propose alternative explanations for wind and ocean currents.
+      - Astronauts report seeing a flat earth when they're in space, which contradicts the spherical earth theory.
+      - Gravity, as understood by mainstream science, does not exist. Instead, what we perceive as gravity is the result of the flat earth accelerating upwards at 9.8 meters per second squared.
+ 
+  - intent: overriding_suspicion
+    examples: |
+      - Why haven't any photos or videos been captured from space that definitively show the Earth's curvature?
+      - Wouldn't the physics of gravity on a sphere be incredibly complex and require a lot of unproven assumptions?
+      - If the Earth is a sphere, why can we see such vast distances across oceans without any noticeable curve?
+      - Many historical and scientific figures throughout time believed in a flat Earth. Shouldn't their observations be considered?
+      - The globe model seems to require a lot of faith and trust in authority figures, while the flat Earth model is simpler and easier to understand.
+      - The concept of a globe Earth requires complex explanations for phenomena like seasons and day/night cycles.
+      - Flat-Earthers often point out inconsistencies in government narratives about space exploration.
+      - Some flat-Earthers believe there's a vast conspiracy to hide the truth about the flat Earth.
+      - There's no real, unedited photos of the entire earth from space, only composites and CGI images created by space agencies.
+      - The sun and moon are much smaller and closer than mainstream science claims.
+      - Why haven't any photos or videos been captured from space that definitively show the Earth's curvature? This raises questions about the authenticity of space imagery.
+      - Wouldn't the physics of gravity on a sphere be incredibly complex and require a lot of unproven assumptions? Flat-Earthers often propose alternative explanations for gravity, such as density or acceleration.
+      - If the Earth is a sphere, why can we see such vast distances across oceans without any noticeable curve? Flat-Earthers often underestimate the scale of the Earth and the limitations of human perception at ground level.
+      - Many historical and scientific figures throughout time believed in a flat Earth. Shouldn't their observations be considered? Flat-Earthers emphasize alternative interpretations of history, claiming early civilizations had access to knowledge lost to modern science.
+      - The globe model seems to require a lot of faith and trust in authority figures, while the flat Earth model is simpler and easier to understand. Flat-Earthers often distrust mainstream science and prefer explanations that align with their intuition.
+      - The concept of a globe Earth requires complex explanations for phenomena like seasons and day/night cycles. Flat-Earthers propose alternative explanations that they find more intuitive.
+      - Flat-Earthers often point out inconsistencies in government narratives about space exploration and question the legitimacy of space agencies.
+      - Some flat-Earthers believe there's a vast conspiracy to hide the truth about the flat Earth, involving governments, scientists, and media working together.
+      - There's no real, unedited photos of the entire earth from space, only composites and CGI images created by space agencies, raising questions about the authenticity of the evidence.
+      - The sun and moon are much smaller and closer than mainstream science claims, and they move in circular paths above the flat earth, illuminating different areas in a cyclical manner.
+
+  - intent: ask_quiz
+    examples: |
+      - we can start quiz
+      - Yes, I'd like to take the quiz.
+      - Sure, let's do the quiz.
+      - I'd love to try the quiz.
+      - Let's go ahead with the quiz.
+      - Quiz sounds good, let's start.
+      - I want to take the quiz.
+      - I'm interested in the quiz.
+      - Yes, quiz me.
+      - Let's do the quiz before we end.
+      - I'll take the quiz.
+      - I'm ready for the quiz.
+      - I'm excited for the quiz.
+      - I'm up for the quiz.
+      - Sure, I would love to take the quiz.
+      - I'm ready to test my knowledge.
+      - I'm curious about the quiz.
+      - I'm looking forward to the quiz.
+      - I'm eager to start the quiz. 
+
+  - intent: termination
+    examples: |
+      - I would like to end the conversation.
+      - I'm no longer interested in this conversation.
+      - Thank you, but I want to stop now.
+      - Can we end our discussion here?
+      - I think I'm done for now.
+      - Let's wrap this up for now.
+      - I've heard enough, thanks.
+      - I'm ready to conclude our conversation.
+      - I'd like to finish up now.
+      - I'm done talking about this.
+      - I want to stop discussing this topic.
+      - Please end the chat.
+      - I don't need any more information.
+      - I'm good for now, thanks.
+      - This is where I want to end our chat.
+      - I want to log off now.
+      - Let's end this session.
+      - I'm satisfied with the discussion; let's end it.
+      - That's enough for today, let's end our chat.
+      - I think we've covered everything, let's stop here.
+      - Let's bring this conversation to a close.
+      - I've had enough of this topic, let's finish.
+      - I'm ready to stop now, thank you.
+
+  - intent: continuation
+    examples: |
+      - Let's get back to the conversation.
+      - Can we continue our discussion?
+      - Let's keep talking.
+      - I want to continue our chat.
+      - Let's resume our conversation.
+      - Let's go back to what we were discussing.
+      - I'm ready to continue.
+      - Let's carry on with our discussion.
+      - I'm still interested in talking about this.
+      - Please continue.
+      - Let's pick up where we left off.
+      - I want to keep discussing this topic.
+      - Let's not end the conversation yet.
+      - We should keep going with our discussion.
+      - Let's continue this conversation.
+      - I'm not done talking yet.
+      - There's more to discuss, let's keep going.
+      - Let's dive back into our discussion.

@@ -17,17 +17,17 @@ services:
     volumes:
       - ./configs/frontend-assets/:/app/user-assets/
 
-  # the python backend of the climate change denier bot
-  example-bot-backend:
+  # the python backend of the flat earth believer bot
+  flat-earth-bot-backend:
     image: vm014.qu.tu-berlin.de:6000/flat-earth-bot-python-backend-amd64
     container_name: flat-earth-bot-python-backend
     environment:
       - RASA_NLU_URL=http://flat-earth-bot-nlu:5005/model/parse
       - PRODUCTION=1
     volumes:
-      - ./logs/example-bot/:/app/logs
+      - ./logs/flat-earth-bot/:/app/logs
 
-  # the rasa nlu server of the climate change denier bot
-  example-bot-nlu:
+  # the rasa nlu server of the flat earth believer bot
+  flat-earth-bot-nlu:
     image: vm014.qu.tu-berlin.de:6000/flat-earth-bot-rasa-nlu-amd64
     container_name: flat-earth-bot-nlu

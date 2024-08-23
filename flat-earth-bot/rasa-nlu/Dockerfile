@@ -7,13 +7,9 @@ WORKDIR /app
 # Copy the Rasa project files into the container
 COPY . /app
 
-#Change ownership of the files to default user
 USER root
 RUN chown -R rasa:rasa /app
-
-# Switch to the rasa user
 USER rasa
-
 # train model
 #RUN [ -f ".rasa" ] rm -r .rasa/
 #RUN [ -f "models" ] rm -r models

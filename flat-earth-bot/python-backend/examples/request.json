@@ -1,0 +1,20 @@
+{
+    "messages": [
+        {
+            "sender": "Flat Earth Believer",
+            "message": "I belive in flat earth"
+        },
+        {
+            "sender": "User",
+            "message": "Spherical earth is scientifically proven!"
+        }
+    ],
+    "llm_parameters": {
+        "max_new_tokens":40,
+        "stop": [
+            "\n"
+        ]
+    },
+    "session_id": "12345",
+    "chatbot": "flat-earth-bot"
+}

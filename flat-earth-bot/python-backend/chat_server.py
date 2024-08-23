@@ -42,6 +42,7 @@ def get_generator():
         request_data["session_id"],
         request_data["llm_parameters"],
         request_data["chatbot"],
+        request.args.get('uid')
     )
     return generator
 

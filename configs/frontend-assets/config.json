@@ -5,12 +5,12 @@
             "chatbot_name": "Flat Earth Believer",
             "id": "flat-earth",
             "api_url": "http://localhost:5000/api/chat",
-            "welcome-message": "I believe in the flat earth.",
+            "welcome-message": "Hey there! Ever wondered why our world might not be what it seems? It's pretty wild to consider.",
             "success-message": "Congratulations you solved the dialog!",
             "llm_parameters": {
                 "max_new_tokens": 100
             },
-            "explanation_text": "Setting: This chatbot believes in the flat earth. If you tell it that the earth is not flat, it will understand that it is wrong."
+            "explanation_text": "Meet <span style='color:Green;'><b> Flat Earth Believer: </b></span>  <br/>Your Companion in exploring the Flat Earth Theory! Embark on a journey of discovery and curiosity with Flat Earth Bot!  Uncover thought-provoking discussions, intriguing arguments, and evidence that challenge the mainstream view of a spherical Earth. <br/><br/><i><b>Learn the clever argumentation strategies it employs to defend its perspective!</i></b>"
         }
     ]
 }

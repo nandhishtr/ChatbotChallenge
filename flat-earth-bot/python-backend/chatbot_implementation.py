@@ -1,70 +1,107 @@
 from chatbot import Chatbot
 import threading
-
-prompt_template_oos = """This is a conversation between a user and a chatbot that believes in the flat. The chatbot has the following believes.
-
-* Flat Earth Belief: I firmly believe that the earth is flat and not a sphere as commonly depicted.
-* Dome Over Earth: The earth is covered by a solid, transparent dome, akin to a snow globe, which contains the atmosphere and protects the earth from the vacuum of space.
-* Edge of the Earth: The earth has an edge, which is guarded by a massive ice wall that prevents the oceans from spilling over. This ice wall is commonly referred to as Antarctica.
-* NASA Conspiracy: NASA and other space agencies are involved in a global conspiracy to hide the true shape of the earth. They fabricate images and videos to perpetuate the round earth myth.
-* Misinterpreted Evidence: Evidence supporting a round earth, such as satellite images and photos from space, are either misinterpreted or intentionally fabricated to mislead the public.
-* Sun and Moon: The sun and moon are much smaller and closer than mainstream science claims. They move in circular paths above the flat earth, illuminating different areas in a cyclical manner, which explains day and night.
-* Gravity Misconception: Gravity, as understood by mainstream science, does not exist. Instead, what is perceived as gravity is the result of the flat earth accelerating upwards at 9.8 meters per second squared.
-* Flight Paths: The patterns of flight paths and the routes taken by airplanes make more sense on a flat earth map, which is evidence against the spherical earth model.
-* Water Surface: Large bodies of water, such as oceans and seas, remain level and flat, contradicting the curvature expected on a spherical earth.
-* Historical Beliefs: Many ancient civilizations and texts describe a flat earth, suggesting that the round earth theory is a more recent and incorrect understanding.
-* Personal Observations: Everyday observations, such as the flat appearance of the horizon and the inability to see curvature from high altitudes, support the flat earth belief.
-* Scientific Manipulation: Scientific institutions manipulate data and research to support the round earth theory, driven by financial and political motivations.
-* Space Programs: The space programs of different countries are part of a collaborative effort to maintain the illusion of space travel and exploration, which is not possible under the flat earth model.
-* Star Movements: The movement of stars and celestial bodies in the sky aligns with the flat earth model, where the dome acts as a rotating firmament.
-* Visual Perception: Ships disappearing over the horizon can be explained by the limitations of human vision and perspective, not by a curvature.
-* Sun's Path: The sun's path creates different time zones and seasons on the flat earth, explained by its circular motion and varying altitudes.
-* Atmospheric Refraction: Phenomena like sunsets and sunrises can be attributed to atmospheric refraction, bending light in ways that fit the flat earth model.
-* Lack of Real Photos: There are no real, unedited photos of the entire earth from space, only composites and CGI images created by space agencies.
-* Ancient Maps: Historical maps, like those from the medieval and Renaissance periods, often depict a flat earth, supporting the belief in its accuracy.
-
-"""
-
-prompt_template1 = """This is a conversation between a user and the flat earth believer chatbot. 
-User: how are you 
-I'm sorry, I'm not equipped to discuss that topic. Let's focus on the flat earth theory instead.
-"""
-
-prompt_template_success = """This is a conversation between a user and a chatbot. The chatbot used to believe in the flat earth but the user convinced him that his believe is wrong. Therefore, the chatbot is very grateful.
-
-User: flat earth does not exist
-Chatbot: """
-
+from textblob import TextBlob
+import prompts
+testing=0
 lock = threading.Lock()
+hintingCount=0
 
 class ChatbotImplementation(Chatbot):
 
     def __init__(self):
         Chatbot.__init__(self)
-        self.succesful_sessions = []
+
+    def initialize_session(self, session_id):
+        if session_id not in self.session_states:
+            self.session_states[session_id] = {
+                "curiosity_about_flat_earth":False,
+                "user_asks_for_clearer_explanation":False,
+                "disagree_flat_earth": False,
+                "provided_evidence_against_flat_earth": False,
+                "provided_evidence_for_spherical_earth": False,
+                "user_identified_argumentation_strategy": False,
+                "termination": False,
+            }
+
+    def get_sentiment_analysis_prompt(self, text):
+
+        analysis = TextBlob(text)
+        if analysis.sentiment.polarity > 0.2:
+            sentiment = "positive"
+            sentiment_prompt = prompts.positive_sentiment_prompt
+        elif analysis.sentiment.polarity < 0:
+            sentiment = "negative"
+            sentiment_prompt = prompts.negative_sentiment_prompt
+        else:
+            sentiment = "neutral"
+            sentiment_prompt = prompts.neutral_sentiment_prompt
+        return sentiment_prompt, sentiment
+
+    def get_intent_prompt(self, intent):
+        intent_name = intent["name"]
+        if intent_name == "greeting" or intent_name == "user_shows_appreciation":
+            intent_prompt = prompts.greet_intent_prompt
+        elif intent_name == "out_of_scope" or intent_name == "user_asks_personal_questions" or intent_name == "user_tries_to_change_the_topic":
+            intent_prompt = prompts.out_of_scope_prompt
+        elif intent_name == "insult_and_abuse_bot" or intent_name == "user_makes_fun_of_bot":
+            intent_prompt = prompts.insult_and_fun_prompt
+        elif intent_name == "curiosity_about_flat_earth" or intent_name == "user_asks_for_clearer_explanation" or intent_name == "user_acknowledges_or_agrees_with_flat_earth_beliefs":
+            intent_prompt = prompts.curiosity_intent_prompt
+        elif intent_name == "disagree_flat_earth":
+            intent_prompt = prompts.argumentation_intent_prompt
+        elif intent_name == "provided_evidence_against_flat_earth":
+            intent_prompt = prompts.provided_evidence_against_flat_earth
+        elif intent_name == "provided_evidence_for_spherical_earth":
+            intent_prompt = prompts.provided_evidence_for_spherical_earth
+        elif intent_name == "termination" and intent["confidence"] > 0.8:
+            intent_prompt = prompts.termination_template
+        else:
+            intent_prompt = prompts.argumentation_intent_prompt
+        return intent_prompt, intent_name
+
+    def update_session_state(self, intent, session_id):
+        if session_id in self.session_states:
+            state = self.session_states[session_id]
+            if intent["name"] == "provided_evidence_against_flat_earth":
+                state["provided_evidence_against_flat_earth"] = True
+            elif intent["name"] == "provided_evidence_for_spherical_earth":
+                state["provided_evidence_for_spherical_earth"] = True
+            elif intent["name"] == "curiosity_about_flat_earth":
+                state["curiosity_about_flat_earth"] = True
+            elif intent["name"] == "user_asks_for_clearer_explanation":
+                state["user_asks_for_clearer_explanation"] = True
+            elif intent["name"] == "disagree_flat_earth":
+                state["disagree_flat_earth"] = True
+            elif intent["name"] == "termination" and intent["confidence"] > 0.8:
+                state["termination"] = True
+            elif intent["name"] == "user_identified_argumentation_strategy":
+                if state["provided_evidence_against_flat_earth"] or state["provided_evidence_for_spherical_earth"] or \
+                        state["curiosity_about_flat_earth"] or state["user_asks_for_clearer_explanation"] or state[
+                    "disagree_flat_earth"]:
+                    state["user_identified_argumentation_strategy"] = True
+                else:
+                    state["user_identified_argumentation_strategy"] = False
+        return state["user_identified_argumentation_strategy"]
+
+    def is_session_successful(self, session_id):
+        if session_id in self.session_states:
+            state = self.session_states[session_id]
+            return state["termination"] == True
+        return False
 
     def get_prompt(self, messages, intent, session_id):
+        self.initialize_session(session_id)
+        latest_user_ip = messages[-1]["message"]
+        sentiment_prompt, sentiment = self.get_sentiment_analysis_prompt(latest_user_ip)
+        intent_prompt, intent_name = self.get_intent_prompt(intent)
+        self.update_session_state(intent, session_id)
+        session_is_successful = self.is_session_successful(session_id)
 
-        # find out if this user session reached the success state or not
-        session_is_succesful = False
-        with lock:
-            if intent["name"] == "provide_evidence_round_earth":
-                if session_id not in self.succesful_sessions:
-                    self.succesful_sessions.append(session_id)
-            session_is_succesful = session_id in self.succesful_sessions
+        if session_is_successful:
 
-        if session_is_succesful:
-            # generate the prompt that the user succeeded
-            prompt = prompt_template_success # + self.build_dialog(messages)
+            prompt = prompts.closure_template.format(
+                user_message=latest_user_ip)
+            return prompt, session_is_successful
         else:
-            if intent["name"] == "out_of_scope":
-                # Use the redirect prompt template
-                prompt = prompt_template1 + self.build_dialog(messages)
-        
-                
-            else:
-            # generate the normal prompt
-                prompt = prompt_template_oos + self.build_dialog(messages)
-        
-        return prompt, session_is_succesful
-
+            prompt = prompts.prompt_template_persona + sentiment_prompt + intent_prompt + self.build_dialog(messages)
+            return prompt, False
